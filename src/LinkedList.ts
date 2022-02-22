@@ -10,6 +10,10 @@ export class LinkedList<T> {
     this.push(...iterable);
   }
 
+  /**
+   * @method unshift
+   * @param values
+   */
   public unshift(...values: T[]): number {
     for (const value of values) {
       const { head } = this;
@@ -19,13 +23,13 @@ export class LinkedList<T> {
         next: head
       };
 
-      this.head = node;
-
       if (isNull(head)) {
         this.tail = node;
       } else {
         head.prev = node;
       }
+
+      this.head = node;
 
       this.size++;
     }
@@ -33,17 +37,22 @@ export class LinkedList<T> {
     return this.size;
   }
 
+  /**
+   * @method shift
+   */
   public shift(): T | undefined {
     const { head } = this;
 
     if (!isNull(head)) {
       const { next } = head;
 
-      this.head = next;
-
       if (isNull(next)) {
         this.tail = next;
+      } else {
+        next.prev = null;
       }
+
+      this.head = next;
 
       this.size--;
 
@@ -51,6 +60,10 @@ export class LinkedList<T> {
     }
   }
 
+  /**
+   * @method push
+   * @param values
+   */
   public push(...values: T[]): number {
     for (const value of values) {
       const { tail } = this;
@@ -74,6 +87,9 @@ export class LinkedList<T> {
     return this.size;
   }
 
+  /**
+   * @method pop
+   */
   public pop(): T | undefined {
     const { tail } = this;
 
@@ -82,6 +98,8 @@ export class LinkedList<T> {
 
       if (isNull(prev)) {
         this.head = prev;
+      } else {
+        prev.next = null;
       }
 
       this.tail = prev;
@@ -92,6 +110,10 @@ export class LinkedList<T> {
     }
   }
 
+  /**
+   * @method at
+   * @param index
+   */
   public at(index: number): T | undefined {
     const { size } = this;
     const startIndex = normalizeIndex(size, index);
@@ -107,6 +129,11 @@ export class LinkedList<T> {
     }
   }
 
+  /**
+   * @method includes
+   * @param value
+   * @param fromIndex
+   */
   public includes(value: T, fromIndex?: number): boolean {
     const { size } = this;
     const startIndex = normalizeIndex(size, fromIndex);
@@ -124,33 +151,84 @@ export class LinkedList<T> {
     return false;
   }
 
+  /**
+   * @method indexOf
+   * @param value
+   * @param fromIndex
+   */
   public indexOf(value: T, fromIndex?: number): number {
     return searchIndexOf(this, value, fromIndex);
   }
 
+  /**
+   * @method lastIndexOf
+   * @param value
+   * @param fromIndex
+   */
   public lastIndexOf(value: T, fromIndex?: number): number {
     return searchIndexOf(this, value, fromIndex, true);
   }
 
+  /**
+   * @method find
+   * @param callback
+   * @param context
+   */
   public find(callback: Callback<T>, context?: any): T | undefined {
     const [node] = search(this, callback, false, context);
 
     return node?.value;
   }
 
+  /**
+   * @method findIndex
+   * @param callback
+   * @param context
+   */
   public findIndex(callback: Callback<T>, context?: any): number {
     const [, index] = search(this, callback, false, context);
 
     return index;
   }
 
-  public splice(fromIndex: number, deleteSize: number, ...values: T[]): T | undefined {
-    console.log(fromIndex, deleteSize, values);
+  /**
+   * @method splice
+   * @param fromIndex
+   * @param deleteLength
+   * @param values
+   */
+  public splice(fromIndex: number, deleteLength: number, ...values: T[]): T | undefined {
+    console.log(fromIndex, deleteLength, values);
 
     return undefined;
   }
 
-  public forEach(callback: Callback<T>, context?: any): void {
+  /**
+   * @method map
+   * @param callback
+   * @param context
+   */
+  public map(callback: Callback<T, T>, context?: any): void {
+    let index = 0;
+    let current = this.head;
+
+    const callbackBound = callback.bind(context);
+
+    while (!isNull(current)) {
+      current.value = callbackBound(current.value, index, this);
+
+      current = current.next;
+
+      index++;
+    }
+  }
+
+  /**
+   * @method forEach
+   * @param callback
+   * @param context
+   */
+  public forEach(callback: Callback<T, void>, context?: any): void {
     let index = 0;
     let current = this.head;
 
@@ -165,6 +243,27 @@ export class LinkedList<T> {
     }
   }
 
+  /**
+   * @method join
+   * @param separator
+   */
+  public join(separator: string = ','): string {
+    let result: string = '';
+
+    this.forEach((value, index) => {
+      if (index > 0) {
+        result += `${separator}${value}`;
+      } else {
+        result += value;
+      }
+    });
+
+    return result;
+  }
+
+  /**
+   * @method values
+   */
   public values(): Iterator<T> {
     let current = this.head;
 
@@ -186,23 +285,38 @@ export class LinkedList<T> {
     };
   }
 
+  /**
+   * @method iterator
+   */
   public [Symbol.iterator](): Iterator<T> {
     return this.values();
   }
 
+  /**
+   * @property length
+   */
   public get length(): number {
     return this.size;
   }
 
+  /**
+   * @property first
+   */
   public get first(): Node<T> | null {
     return this.head;
   }
 
+  /**
+   * @property last
+   */
   public get last(): Node<T> | null {
     return this.tail;
   }
 
+  /**
+   * @method toString
+   */
   public toString(): string {
-    return 'LinkedList';
+    return this.join();
   }
 }

@@ -99,6 +99,10 @@
       this.tail = null;
       this.push(...iterable);
     }
+    /**
+     * @method unshift
+     * @param values
+     */
     unshift(...values) {
       for (const value of values) {
         const { head } = this;
@@ -107,28 +111,37 @@
           prev: null,
           next: head
         };
-        this.head = node;
         if (isNull(head)) {
           this.tail = node;
         } else {
           head.prev = node;
         }
+        this.head = node;
         this.size++;
       }
       return this.size;
     }
+    /**
+     * @method shift
+     */
     shift() {
       const { head } = this;
       if (!isNull(head)) {
         const { next } = head;
-        this.head = next;
         if (isNull(next)) {
           this.tail = next;
+        } else {
+          next.prev = null;
         }
+        this.head = next;
         this.size--;
         return head.value;
       }
     }
+    /**
+     * @method push
+     * @param values
+     */
     push(...values) {
       for (const value of values) {
         const { tail } = this;
@@ -147,18 +160,27 @@
       }
       return this.size;
     }
+    /**
+     * @method pop
+     */
     pop() {
       const { tail } = this;
       if (!isNull(tail)) {
         const { prev } = tail;
         if (isNull(prev)) {
           this.head = prev;
+        } else {
+          prev.next = null;
         }
         this.tail = prev;
         this.size--;
         return tail.value;
       }
     }
+    /**
+     * @method at
+     * @param index
+     */
     at(index) {
       const { size } = this;
       const startIndex = normalizeIndex(size, index);
@@ -170,6 +192,11 @@
         return node === null || node === void 0 ? void 0 : node.value;
       }
     }
+    /**
+     * @method includes
+     * @param value
+     * @param fromIndex
+     */
     includes(value, fromIndex) {
       const { size } = this;
       const startIndex = normalizeIndex(size, fromIndex);
@@ -182,24 +209,70 @@
       }
       return false;
     }
+    /**
+     * @method indexOf
+     * @param value
+     * @param fromIndex
+     */
     indexOf(value, fromIndex) {
       return searchIndexOf(this, value, fromIndex);
     }
+    /**
+     * @method lastIndexOf
+     * @param value
+     * @param fromIndex
+     */
     lastIndexOf(value, fromIndex) {
       return searchIndexOf(this, value, fromIndex, true);
     }
+    /**
+     * @method find
+     * @param callback
+     * @param context
+     */
     find(callback, context) {
       const [node] = search(this, callback, false, context);
       return node === null || node === void 0 ? void 0 : node.value;
     }
+    /**
+     * @method findIndex
+     * @param callback
+     * @param context
+     */
     findIndex(callback, context) {
       const [, index] = search(this, callback, false, context);
       return index;
     }
-    splice(fromIndex, deleteSize, ...values) {
-      console.log(fromIndex, deleteSize, values);
+    /**
+     * @method splice
+     * @param fromIndex
+     * @param deleteLength
+     * @param values
+     */
+    splice(fromIndex, deleteLength, ...values) {
+      console.log(fromIndex, deleteLength, values);
       return undefined;
     }
+    /**
+     * @method map
+     * @param callback
+     * @param context
+     */
+    map(callback, context) {
+      let index = 0;
+      let current = this.head;
+      const callbackBound = callback.bind(context);
+      while (!isNull(current)) {
+        current.value = callbackBound(current.value, index, this);
+        current = current.next;
+        index++;
+      }
+    }
+    /**
+     * @method forEach
+     * @param callback
+     * @param context
+     */
     forEach(callback, context) {
       let index = 0;
       let current = this.head;
@@ -210,6 +283,24 @@
         index++;
       }
     }
+    /**
+     * @method join
+     * @param separator
+     */
+    join(separator = ',') {
+      let result = '';
+      this.forEach((value, index) => {
+        if (index > 0) {
+          result += `${separator}${value}`;
+        } else {
+          result += value;
+        }
+      });
+      return result;
+    }
+    /**
+     * @method values
+     */
     values() {
       let current = this.head;
       return {
@@ -226,20 +317,35 @@
         }
       };
     }
+    /**
+     * @method iterator
+     */
     [Symbol.iterator]() {
       return this.values();
     }
+    /**
+     * @property length
+     */
     get length() {
       return this.size;
     }
+    /**
+     * @property first
+     */
     get first() {
       return this.head;
     }
+    /**
+     * @property last
+     */
     get last() {
       return this.tail;
     }
+    /**
+     * @method toString
+     */
     toString() {
-      return 'LinkedList';
+      return this.join();
     }
   }
 

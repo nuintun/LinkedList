@@ -6,4 +6,4 @@ export interface Node<T> {
   next: Node<T> | null;
 }
 
-export type Callback<T> = (value: T, index: number, source: LinkedList<T>) => boolean;
+export type Callback<T, R = boolean> = (value: T, index: number, source: LinkedList<T>) => R;
