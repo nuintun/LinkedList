@@ -20,13 +20,6 @@ export class LinkedList<T> {
   }
 
   /**
-   * @property length
-   */
-  get length(): number {
-    return this.#size;
-  }
-
-  /**
    * @function #search
    * @description 根据指定回调搜索双链表
    * @param callback 回调函数
@@ -97,6 +90,13 @@ export class LinkedList<T> {
     }
 
     return -1;
+  }
+
+  /**
+   * @property length
+   */
+  get length(): number {
+    return this.#size;
   }
 
   /**
