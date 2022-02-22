@@ -16,6 +16,36 @@
 })(this, function () {
   'use strict';
 
+  /*! *****************************************************************************
+    Copyright (c) Microsoft Corporation.
+
+    Permission to use, copy, modify, and/or distribute this software for any
+    purpose with or without fee is hereby granted.
+
+    THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH
+    REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY
+    AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT,
+    INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM
+    LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+    OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
+    PERFORMANCE OF THIS SOFTWARE.
+    ***************************************************************************** */
+
+  function __classPrivateFieldGet(receiver, state, kind, f) {
+    if (kind === 'a' && !f) throw new TypeError('Private accessor was defined without a getter');
+    if (typeof state === 'function' ? receiver !== state || !f : !state.has(receiver))
+      throw new TypeError('Cannot read private member from an object whose class did not declare it');
+    return kind === 'm' ? f : kind === 'a' ? f.call(receiver) : f ? f.value : state.get(receiver);
+  }
+
+  function __classPrivateFieldSet(receiver, state, value, kind, f) {
+    if (kind === 'm') throw new TypeError('Private method is not writable');
+    if (kind === 'a' && !f) throw new TypeError('Private accessor was defined without a setter');
+    if (typeof state === 'function' ? receiver !== state || !f : !state.has(receiver))
+      throw new TypeError('Cannot write private member to an object whose class did not declare it');
+    return kind === 'a' ? f.call(receiver, value) : f ? (f.value = value) : state.set(receiver, value), value;
+  }
+
   /**
    * @function isNull
    * @description 是否为空值
@@ -27,114 +57,90 @@
   /**
    * @function normalizeIndex
    * @description 标准化开始索引
-   * @param length 双链表长度
+   * @param size 双链表长度
    * @param fromIndex 开始索引
    */
-  function normalizeIndex(length, fromIndex = 0) {
-    return fromIndex < 0 ? Math.max(0, length + fromIndex) : fromIndex;
-  }
-  /**
-   * @function search
-   * @description 根据指定回调搜索双链表
-   * @param source 双链表
-   * @param callback 回调函数
-   * @param reverse 是否逆向搜索
-   * @param context 回调函数上下文
-   */
-  function search(source, callback, reverse, context) {
-    const { length } = source;
-    if (length > 0) {
-      const callbackBound = callback.bind(context);
-      if (reverse) {
-        let index = length - 1;
-        let current = source.last;
-        while (!isNull(current)) {
-          if (callbackBound(current.value, index, source)) {
-            return [current, index];
-          } else {
-            current = current.prev;
-          }
-          index--;
-        }
-      } else {
-        let index = 0;
-        let current = source.first;
-        while (!isNull(current)) {
-          if (callbackBound(current.value, index, source)) {
-            return [current, index];
-          } else {
-            current = current.next;
-          }
-          index++;
-        }
-      }
-    }
-    return [, -1];
-  }
-  /**
-   * @function searchIndexOf
-   * @description 根据指定值搜索双链表
-   * @param source 双链表
-   * @param value 搜索值
-   * @param fromIndex 开始索引
-   * @param reverse 是否逆向搜索
-   */
-  function searchIndexOf(source, value, fromIndex, reverse) {
-    const { length } = source;
-    const startIndex = normalizeIndex(length, fromIndex);
-    if (startIndex + 1 <= length) {
-      const callback = (currentValue, currentIndex) => {
-        return currentValue === value && currentIndex >= startIndex;
-      };
-      const [, index] = search(source, callback, reverse);
-      return index;
-    }
-    return -1;
+  function normalizeIndex(size, fromIndex = 0) {
+    return fromIndex < 0 ? Math.max(0, size + fromIndex) : fromIndex;
   }
 
+  var _LinkedList_instances,
+    _LinkedList_size,
+    _LinkedList_head,
+    _LinkedList_tail,
+    _LinkedList_search,
+    _LinkedList_searchIndexOf;
   class LinkedList {
     constructor(iterable = []) {
-      this.size = 0;
-      this.head = null;
-      this.tail = null;
+      _LinkedList_instances.add(this);
+      /**
+       * @property #size
+       */
+      _LinkedList_size.set(this, 0);
+      /**
+       * @property #head
+       */
+      _LinkedList_head.set(this, null);
+      /**
+       * @property #tail
+       */
+      _LinkedList_tail.set(this, null);
       this.push(...iterable);
+    }
+    /**
+     * @property length
+     */
+    get length() {
+      return __classPrivateFieldGet(this, _LinkedList_size, 'f');
     }
     /**
      * @method unshift
      * @param values
      */
     unshift(...values) {
+      var _a;
       for (const value of values) {
-        const { head } = this;
+        const head = __classPrivateFieldGet(this, _LinkedList_head, 'f');
         const node = {
           value,
           prev: null,
           next: head
         };
         if (isNull(head)) {
-          this.tail = node;
+          __classPrivateFieldSet(this, _LinkedList_tail, node, 'f');
         } else {
           head.prev = node;
         }
-        this.head = node;
-        this.size++;
+        __classPrivateFieldSet(this, _LinkedList_head, node, 'f');
+        __classPrivateFieldSet(
+          this,
+          _LinkedList_size,
+          ((_a = __classPrivateFieldGet(this, _LinkedList_size, 'f')), _a++, _a),
+          'f'
+        );
       }
-      return this.size;
+      return __classPrivateFieldGet(this, _LinkedList_size, 'f');
     }
     /**
      * @method shift
      */
     shift() {
-      const { head } = this;
+      var _a;
+      const head = __classPrivateFieldGet(this, _LinkedList_head, 'f');
       if (!isNull(head)) {
         const { next } = head;
         if (isNull(next)) {
-          this.tail = next;
+          __classPrivateFieldSet(this, _LinkedList_tail, next, 'f');
         } else {
           next.prev = null;
         }
-        this.head = next;
-        this.size--;
+        __classPrivateFieldSet(this, _LinkedList_head, next, 'f');
+        __classPrivateFieldSet(
+          this,
+          _LinkedList_size,
+          ((_a = __classPrivateFieldGet(this, _LinkedList_size, 'f')), _a--, _a),
+          'f'
+        );
         return head.value;
       }
     }
@@ -143,37 +149,49 @@
      * @param values
      */
     push(...values) {
+      var _a;
       for (const value of values) {
-        const { tail } = this;
+        const tail = __classPrivateFieldGet(this, _LinkedList_tail, 'f');
         const node = {
           value,
           prev: tail,
           next: null
         };
         if (isNull(tail)) {
-          this.head = node;
+          __classPrivateFieldSet(this, _LinkedList_head, node, 'f');
         } else {
           tail.next = node;
         }
-        this.tail = node;
-        this.size++;
+        __classPrivateFieldSet(this, _LinkedList_tail, node, 'f');
+        __classPrivateFieldSet(
+          this,
+          _LinkedList_size,
+          ((_a = __classPrivateFieldGet(this, _LinkedList_size, 'f')), _a++, _a),
+          'f'
+        );
       }
-      return this.size;
+      return __classPrivateFieldGet(this, _LinkedList_size, 'f');
     }
     /**
      * @method pop
      */
     pop() {
-      const { tail } = this;
+      var _a;
+      const tail = __classPrivateFieldGet(this, _LinkedList_tail, 'f');
       if (!isNull(tail)) {
         const { prev } = tail;
         if (isNull(prev)) {
-          this.head = prev;
+          __classPrivateFieldSet(this, _LinkedList_head, prev, 'f');
         } else {
           prev.next = null;
         }
-        this.tail = prev;
-        this.size--;
+        __classPrivateFieldSet(this, _LinkedList_tail, prev, 'f');
+        __classPrivateFieldSet(
+          this,
+          _LinkedList_size,
+          ((_a = __classPrivateFieldGet(this, _LinkedList_size, 'f')), _a--, _a),
+          'f'
+        );
         return tail.value;
       }
     }
@@ -182,13 +200,17 @@
      * @param index
      */
     at(index) {
-      const { size } = this;
+      const size = __classPrivateFieldGet(this, _LinkedList_size, 'f');
       const startIndex = normalizeIndex(size, index);
       if (startIndex + 1 <= size) {
         const callback = (_currentValue, currentIndex) => {
           return currentIndex === startIndex;
         };
-        const [node] = search(this, callback, startIndex > size / 2);
+        const [node] = __classPrivateFieldGet(this, _LinkedList_instances, 'm', _LinkedList_search).call(
+          this,
+          callback,
+          startIndex > size / 2
+        );
         return node === null || node === void 0 ? void 0 : node.value;
       }
     }
@@ -198,13 +220,17 @@
      * @param fromIndex
      */
     includes(value, fromIndex) {
-      const { size } = this;
+      const size = __classPrivateFieldGet(this, _LinkedList_size, 'f');
       const startIndex = normalizeIndex(size, fromIndex);
       if (startIndex + 1 <= size) {
         const callback = (currentValue, currentIndex) => {
           return currentValue === value && currentIndex >= startIndex;
         };
-        const [, index] = search(this, callback, startIndex > size / 2);
+        const [, index] = __classPrivateFieldGet(this, _LinkedList_instances, 'm', _LinkedList_search).call(
+          this,
+          callback,
+          startIndex > size / 2
+        );
         return index >= 0;
       }
       return false;
@@ -215,7 +241,7 @@
      * @param fromIndex
      */
     indexOf(value, fromIndex) {
-      return searchIndexOf(this, value, fromIndex);
+      return __classPrivateFieldGet(this, _LinkedList_instances, 'm', _LinkedList_searchIndexOf).call(this, value, fromIndex);
     }
     /**
      * @method lastIndexOf
@@ -223,7 +249,12 @@
      * @param fromIndex
      */
     lastIndexOf(value, fromIndex) {
-      return searchIndexOf(this, value, fromIndex, true);
+      return __classPrivateFieldGet(this, _LinkedList_instances, 'm', _LinkedList_searchIndexOf).call(
+        this,
+        value,
+        fromIndex,
+        true
+      );
     }
     /**
      * @method find
@@ -231,7 +262,12 @@
      * @param context
      */
     find(callback, context) {
-      const [node] = search(this, callback, false, context);
+      const [node] = __classPrivateFieldGet(this, _LinkedList_instances, 'm', _LinkedList_search).call(
+        this,
+        callback,
+        false,
+        context
+      );
       return node === null || node === void 0 ? void 0 : node.value;
     }
     /**
@@ -240,7 +276,12 @@
      * @param context
      */
     findIndex(callback, context) {
-      const [, index] = search(this, callback, false, context);
+      const [, index] = __classPrivateFieldGet(this, _LinkedList_instances, 'm', _LinkedList_search).call(
+        this,
+        callback,
+        false,
+        context
+      );
       return index;
     }
     /**
@@ -260,7 +301,7 @@
      */
     map(callback, context) {
       let index = 0;
-      let current = this.head;
+      let current = __classPrivateFieldGet(this, _LinkedList_head, 'f');
       const callbackBound = callback.bind(context);
       while (!isNull(current)) {
         current.value = callbackBound(current.value, index, this);
@@ -275,7 +316,7 @@
      */
     forEach(callback, context) {
       let index = 0;
-      let current = this.head;
+      let current = __classPrivateFieldGet(this, _LinkedList_head, 'f');
       const callbackBound = callback.bind(context);
       while (!isNull(current)) {
         callbackBound(current.value, index, this);
@@ -302,7 +343,7 @@
      * @method values
      */
     values() {
-      let current = this.head;
+      let current = __classPrivateFieldGet(this, _LinkedList_head, 'f');
       return {
         next: () => {
           if (isNull(current)) {
@@ -320,26 +361,58 @@
     /**
      * @method iterator
      */
-    [Symbol.iterator]() {
+    [((_LinkedList_size = new WeakMap()),
+    (_LinkedList_head = new WeakMap()),
+    (_LinkedList_tail = new WeakMap()),
+    (_LinkedList_instances = new WeakSet()),
+    (_LinkedList_search = function _LinkedList_search(callback, reverse, context) {
+      const size = __classPrivateFieldGet(this, _LinkedList_size, 'f');
+      if (size > 0) {
+        const callbackBound = callback.bind(context);
+        if (reverse) {
+          let index = size - 1;
+          let current = __classPrivateFieldGet(this, _LinkedList_tail, 'f');
+          while (!isNull(current)) {
+            if (callbackBound(current.value, index, this)) {
+              return [current, index];
+            } else {
+              current = current.prev;
+            }
+            index--;
+          }
+        } else {
+          let index = 0;
+          let current = __classPrivateFieldGet(this, _LinkedList_head, 'f');
+          while (!isNull(current)) {
+            if (callbackBound(current.value, index, this)) {
+              return [current, index];
+            } else {
+              current = current.next;
+            }
+            index++;
+          }
+        }
+      }
+      return [, -1];
+    }),
+    (_LinkedList_searchIndexOf = function _LinkedList_searchIndexOf(value, fromIndex, reverse) {
+      const size = __classPrivateFieldGet(this, _LinkedList_size, 'f');
+      const startIndex = normalizeIndex(size, fromIndex);
+      if (startIndex + 1 <= size) {
+        const callback = (currentValue, currentIndex) => {
+          return currentValue === value && currentIndex >= startIndex;
+        };
+        const [, index] = __classPrivateFieldGet(this, _LinkedList_instances, 'm', _LinkedList_search).call(
+          this,
+          callback,
+          reverse
+        );
+        return index;
+      }
+      return -1;
+    }),
+    Symbol.iterator)]() {
       return this.values();
-    }
-    /**
-     * @property length
-     */
-    get length() {
-      return this.size;
-    }
-    /**
-     * @property first
-     */
-    get first() {
-      return this.head;
-    }
-    /**
-     * @property last
-     */
-    get last() {
-      return this.tail;
     }
     /**
      * @method toString

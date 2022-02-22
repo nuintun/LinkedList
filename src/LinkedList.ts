@@ -1,22 +1,111 @@
 import { Callback, Node } from './types';
-import { isNull, normalizeIndex, search, searchIndexOf } from './utils';
+import { isNull, normalizeIndex } from './utils';
 
 export class LinkedList<T> {
-  protected size: number = 0;
-  protected head: Node<T> | null = null;
-  protected tail: Node<T> | null = null;
+  /**
+   * @property #size
+   */
+  #size: number = 0;
+  /**
+   * @property #head
+   */
+  #head: Node<T> | null = null;
+  /**
+   * @property #tail
+   */
+  #tail: Node<T> | null = null;
 
-  public constructor(iterable: Iterable<T> = []) {
+  constructor(iterable: Iterable<T> = []) {
     this.push(...iterable);
+  }
+
+  /**
+   * @property length
+   */
+  get length(): number {
+    return this.#size;
+  }
+
+  /**
+   * @function #search
+   * @description 根据指定回调搜索双链表
+   * @param callback 回调函数
+   * @param reverse 是否逆向搜索
+   * @param context 回调函数上下文
+   */
+  #search(
+    callback: Callback<T>,
+    reverse?: boolean,
+    context?: any
+  ): [node: Node<T>, index: number] | [node: undefined, index: -1] {
+    const size = this.#size;
+
+    if (size > 0) {
+      const callbackBound = callback.bind(context);
+
+      if (reverse) {
+        let index = size - 1;
+        let current = this.#tail;
+
+        while (!isNull(current)) {
+          if (callbackBound(current.value, index, this)) {
+            return [current, index];
+          } else {
+            current = current.prev;
+          }
+
+          index--;
+        }
+      } else {
+        let index = 0;
+        let current = this.#head;
+
+        while (!isNull(current)) {
+          if (callbackBound(current.value, index, this)) {
+            return [current, index];
+          } else {
+            current = current.next;
+          }
+
+          index++;
+        }
+      }
+    }
+
+    return [, -1];
+  }
+
+  /**
+   * @function #searchIndexOf
+   * @description 根据指定值搜索双链表
+   * @param value 搜索值
+   * @param fromIndex 开始索引
+   * @param reverse 是否逆向搜索
+   */
+  #searchIndexOf(value: T, fromIndex?: number, reverse?: boolean): number {
+    const size = this.#size;
+    const startIndex = normalizeIndex(size, fromIndex);
+
+    if (startIndex + 1 <= size) {
+      const callback: Callback<T> = (currentValue, currentIndex) => {
+        return currentValue === value && currentIndex >= startIndex;
+      };
+
+      const [, index] = this.#search(callback, reverse);
+
+      return index;
+    }
+
+    return -1;
   }
 
   /**
    * @method unshift
    * @param values
    */
-  public unshift(...values: T[]): number {
+  unshift(...values: T[]): number {
     for (const value of values) {
-      const { head } = this;
+      const head = this.#head;
       const node: Node<T> = {
         value,
         prev: null,
@@ -24,37 +113,37 @@ export class LinkedList<T> {
       };
 
       if (isNull(head)) {
-        this.tail = node;
+        this.#tail = node;
       } else {
         head.prev = node;
       }
 
-      this.head = node;
+      this.#head = node;
 
-      this.size++;
+      this.#size++;
     }
 
-    return this.size;
+    return this.#size;
   }
 
   /**
    * @method shift
    */
-  public shift(): T | undefined {
-    const { head } = this;
+  shift(): T | undefined {
+    const head = this.#head;
 
     if (!isNull(head)) {
       const { next } = head;
 
       if (isNull(next)) {
-        this.tail = next;
+        this.#tail = next;
       } else {
         next.prev = null;
       }
 
-      this.head = next;
+      this.#head = next;
 
-      this.size--;
+      this.#size--;
 
       return head.value;
     }
@@ -64,9 +153,9 @@ export class LinkedList<T> {
    * @method push
    * @param values
    */
-  public push(...values: T[]): number {
+  push(...values: T[]): number {
     for (const value of values) {
-      const { tail } = this;
+      const tail = this.#tail;
       const node: Node<T> = {
         value,
         prev: tail,
@@ -74,37 +163,37 @@ export class LinkedList<T> {
       };
 
       if (isNull(tail)) {
-        this.head = node;
+        this.#head = node;
       } else {
         tail.next = node;
       }
 
-      this.tail = node;
+      this.#tail = node;
 
-      this.size++;
+      this.#size++;
     }
 
-    return this.size;
+    return this.#size;
   }
 
   /**
    * @method pop
    */
-  public pop(): T | undefined {
-    const { tail } = this;
+  pop(): T | undefined {
+    const tail = this.#tail;
 
     if (!isNull(tail)) {
       const { prev } = tail;
 
       if (isNull(prev)) {
-        this.head = prev;
+        this.#head = prev;
       } else {
         prev.next = null;
       }
 
-      this.tail = prev;
+      this.#tail = prev;
 
-      this.size--;
+      this.#size--;
 
       return tail.value;
     }
@@ -114,8 +203,8 @@ export class LinkedList<T> {
    * @method at
    * @param index
    */
-  public at(index: number): T | undefined {
-    const { size } = this;
+  at(index: number): T | undefined {
+    const size = this.#size;
     const startIndex = normalizeIndex(size, index);
 
     if (startIndex + 1 <= size) {
@@ -123,7 +212,7 @@ export class LinkedList<T> {
         return currentIndex === startIndex;
       };
 
-      const [node] = search(this, callback, startIndex > size / 2);
+      const [node] = this.#search(callback, startIndex > size / 2);
 
       return node?.value;
     }
@@ -134,8 +223,8 @@ export class LinkedList<T> {
    * @param value
    * @param fromIndex
    */
-  public includes(value: T, fromIndex?: number): boolean {
-    const { size } = this;
+  includes(value: T, fromIndex?: number): boolean {
+    const size = this.#size;
     const startIndex = normalizeIndex(size, fromIndex);
 
     if (startIndex + 1 <= size) {
@@ -143,7 +232,7 @@ export class LinkedList<T> {
         return currentValue === value && currentIndex >= startIndex;
       };
 
-      const [, index] = search(this, callback, startIndex > size / 2);
+      const [, index] = this.#search(callback, startIndex > size / 2);
 
       return index >= 0;
     }
@@ -156,8 +245,8 @@ export class LinkedList<T> {
    * @param value
    * @param fromIndex
    */
-  public indexOf(value: T, fromIndex?: number): number {
-    return searchIndexOf(this, value, fromIndex);
+  indexOf(value: T, fromIndex?: number): number {
+    return this.#searchIndexOf(value, fromIndex);
   }
 
   /**
@@ -165,8 +254,8 @@ export class LinkedList<T> {
    * @param value
    * @param fromIndex
    */
-  public lastIndexOf(value: T, fromIndex?: number): number {
-    return searchIndexOf(this, value, fromIndex, true);
+  lastIndexOf(value: T, fromIndex?: number): number {
+    return this.#searchIndexOf(value, fromIndex, true);
   }
 
   /**
@@ -174,8 +263,8 @@ export class LinkedList<T> {
    * @param callback
    * @param context
    */
-  public find(callback: Callback<T>, context?: any): T | undefined {
-    const [node] = search(this, callback, false, context);
+  find(callback: Callback<T>, context?: any): T | undefined {
+    const [node] = this.#search(callback, false, context);
 
     return node?.value;
   }
@@ -185,8 +274,8 @@ export class LinkedList<T> {
    * @param callback
    * @param context
    */
-  public findIndex(callback: Callback<T>, context?: any): number {
-    const [, index] = search(this, callback, false, context);
+  findIndex(callback: Callback<T>, context?: any): number {
+    const [, index] = this.#search(callback, false, context);
 
     return index;
   }
@@ -197,7 +286,7 @@ export class LinkedList<T> {
    * @param deleteLength
    * @param values
    */
-  public splice(fromIndex: number, deleteLength: number, ...values: T[]): T | undefined {
+  splice(fromIndex: number, deleteLength: number, ...values: T[]): T | undefined {
     console.log(fromIndex, deleteLength, values);
 
     return undefined;
@@ -208,9 +297,9 @@ export class LinkedList<T> {
    * @param callback
    * @param context
    */
-  public map(callback: Callback<T, T>, context?: any): void {
+  map(callback: Callback<T, T>, context?: any): void {
     let index = 0;
-    let current = this.head;
+    let current = this.#head;
 
     const callbackBound = callback.bind(context);
 
@@ -228,9 +317,9 @@ export class LinkedList<T> {
    * @param callback
    * @param context
    */
-  public forEach(callback: Callback<T, void>, context?: any): void {
+  forEach(callback: Callback<T, void>, context?: any): void {
     let index = 0;
-    let current = this.head;
+    let current = this.#head;
 
     const callbackBound = callback.bind(context);
 
@@ -247,7 +336,7 @@ export class LinkedList<T> {
    * @method join
    * @param separator
    */
-  public join(separator: string = ','): string {
+  join(separator: string = ','): string {
     let result: string = '';
 
     this.forEach((value, index) => {
@@ -264,8 +353,8 @@ export class LinkedList<T> {
   /**
    * @method values
    */
-  public values(): Iterator<T> {
-    let current = this.head;
+  values(): Iterator<T> {
+    let current = this.#head;
 
     return {
       next: () => {
@@ -288,35 +377,14 @@ export class LinkedList<T> {
   /**
    * @method iterator
    */
-  public [Symbol.iterator](): Iterator<T> {
+  [Symbol.iterator](): Iterator<T> {
     return this.values();
-  }
-
-  /**
-   * @property length
-   */
-  public get length(): number {
-    return this.size;
-  }
-
-  /**
-   * @property first
-   */
-  public get first(): Node<T> | null {
-    return this.head;
-  }
-
-  /**
-   * @property last
-   */
-  public get last(): Node<T> | null {
-    return this.tail;
   }
 
   /**
    * @method toString
    */
-  public toString(): string {
+  toString(): string {
     return this.join();
   }
 }
