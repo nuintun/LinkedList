@@ -26,13 +26,8 @@ export default {
     exports: 'auto',
     esModule: false,
     name: 'LinkedList',
-    amd: { id: 'qrcode' },
+    amd: { id: 'LinkedList' },
     file: 'examples/LinkedList.js'
-  },
-  onwarn(error, warn) {
-    if (error.code !== 'CIRCULAR_DEPENDENCY') {
-      warn(error);
-    }
   },
   plugins: [resolve(), typescript(), treeShake()]
 };

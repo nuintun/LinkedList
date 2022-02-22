@@ -17,11 +17,6 @@ export default function rollup(esnext) {
     },
     external: ['tslib'],
     preserveModules: true,
-    plugins: [typescript(), treeShake()],
-    onwarn(error, warn) {
-      if (error.code !== 'CIRCULAR_DEPENDENCY') {
-        warn(error);
-      }
-    }
+    plugins: [typescript(), treeShake()]
   };
 }
