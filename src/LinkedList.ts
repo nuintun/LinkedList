@@ -349,25 +349,14 @@ export class LinkedList<T> {
   /**
    * @method values
    */
-  values(): Iterator<T> {
+  *values(): Iterator<T> {
     let current = this.#head;
 
-    return {
-      next: () => {
-        if (isNull(current)) {
-          return {
-            done: true,
-            value: undefined
-          };
-        }
+    while (!isNull(current)) {
+      yield current.value;
 
-        const { value } = current;
-
-        current = current.next;
-
-        return { done: false, value };
-      }
-    };
+      current = current.next;
+    }
   }
 
   /**

@@ -1,7 +1,7 @@
 {
   "name": "@nuintun/linked-list",
   "version": "0.0.1",
-  "description": "Typescript doubly linked list implemented using Array api.",
+  "description": "A typescript array-like doubly linked list",
   "main": "cjs/index.js",
   "module": "esm/index.js",
   "typings": "typings/index.d.ts",

@@ -3,7 +3,7 @@
  * @license MIT
  * @version 0.0.1
  * @author nuintun
- * @description Typescript doubly linked list implemented using Array api.
+ * @description A typescript array-like doubly linked list
  * @see https://github.com/nuintun/LinkedList#readme
  */
 
@@ -345,21 +345,12 @@
     /**
      * @method values
      */
-    values() {
+    *values() {
       let current = __classPrivateFieldGet(this, _LinkedList_head, 'f');
-      return {
-        next: () => {
-          if (isNull(current)) {
-            return {
-              done: true,
-              value: undefined
-            };
-          }
-          const { value } = current;
-          current = current.next;
-          return { done: false, value };
-        }
-      };
+      while (!isNull(current)) {
+        yield current.value;
+        current = current.next;
+      }
     }
     /**
      * @method iterator

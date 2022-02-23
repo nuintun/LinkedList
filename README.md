@@ -1,2 +1,3 @@
 # LinkedList
-Typescript doubly linked list implemented using Array api.
+
+A typescript array-like doubly linked list.
