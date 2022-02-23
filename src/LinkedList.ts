@@ -6,10 +6,12 @@ export class LinkedList<T> {
    * @property #size
    */
   #size: number = 0;
+
   /**
    * @property #head
    */
   #head: Node<T> | null = null;
+
   /**
    * @property #tail
    */
