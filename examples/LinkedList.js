@@ -61,22 +61,17 @@
    * @param values 值列表
    */
   function makeLinkedNode(values) {
-    const nodes = [];
-    let prev = null;
-    for (const value of values) {
-      const node = {
-        value,
-        prev,
-        next: null
-      };
-      if (prev) {
+    const [value] = values;
+    const head = { value, prev: null, next: null };
+    const tail = values.reduce((prev, value, index) => {
+      if (index > 0) {
+        const node = { value, prev, next: null };
         prev.next = node;
+        return node;
       }
-      prev = node;
-      nodes.push(node);
-    }
-    const { length } = nodes;
-    return [nodes[0], nodes[length > 1 ? length - 1 : 0]];
+      return prev;
+    }, head);
+    return [head, tail];
   }
 
   var _LinkedList_instances,
@@ -199,7 +194,7 @@
     at(index) {
       const size = __classPrivateFieldGet(this, _LinkedList_size, 'f');
       const startIndex = normalizeIndex(size, index);
-      if (startIndex + 1 <= size) {
+      if (startIndex < size) {
         const callback = (_currentValue, currentIndex) => {
           return currentIndex === startIndex;
         };
@@ -219,7 +214,7 @@
     includes(value, fromIndex) {
       const size = __classPrivateFieldGet(this, _LinkedList_size, 'f');
       const startIndex = normalizeIndex(size, fromIndex);
-      if (startIndex + 1 <= size) {
+      if (startIndex < size) {
         const callback = (currentValue, currentIndex) => {
           return currentValue === value && currentIndex >= startIndex;
         };
@@ -292,17 +287,70 @@
       return undefined;
     }
     /**
+     * @method concat
+     * @param sources
+     */
+    concat(...sources) {
+      const result = new LinkedList();
+      sources.forEach(source => {
+        result.push(...source);
+      });
+      return result;
+    }
+    /**
      * @method map
      * @param callback
      * @param context
      */
     map(callback, context) {
-      const mapped = new LinkedList();
+      const result = new LinkedList();
       const callbackBound = callback.bind(context);
       this.forEach((value, index, source) => {
-        mapped.push(callbackBound(value, index, source));
+        result.push(callbackBound(value, index, source));
       });
-      return mapped;
+      return result;
+    }
+    /**
+     * @method filter
+     * @param callback
+     * @param context
+     */
+    filter(callback, context) {
+      const result = new LinkedList();
+      const callbackBound = callback.bind(context);
+      this.forEach((value, index, source) => {
+        if (callbackBound(value, index, source)) {
+          result.push(value);
+        }
+      });
+      return result;
+    }
+    /**
+     * @method reverse
+     */
+    reverse() {
+      var _a, _b;
+      let current = __classPrivateFieldGet(this, _LinkedList_head, 'f');
+      while (current) {
+        const { prev, next } = current;
+        [current.prev, current.next] = [next, prev];
+        current = next;
+      }
+      (_a = this),
+        (_b = this),
+        ([
+          {
+            set value(_c) {
+              __classPrivateFieldSet(_a, _LinkedList_head, _c, 'f');
+            }
+          }.value,
+          {
+            set value(_c) {
+              __classPrivateFieldSet(_b, _LinkedList_tail, _c, 'f');
+            }
+          }.value
+        ] = [__classPrivateFieldGet(this, _LinkedList_tail, 'f'), __classPrivateFieldGet(this, _LinkedList_head, 'f')]);
+      return this;
     }
     /**
      * @method forEach

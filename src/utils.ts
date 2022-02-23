@@ -16,27 +16,21 @@ export function normalizeIndex(size: number, fromIndex: number = 0): number {
  * @param values 值列表
  */
 export function makeLinkedNode<T>(values: T[]): [head: Node<T>, tail: Node<T>] {
-  const nodes: Node<T>[] = [];
+  const [value] = values;
 
-  let prev: Node<T> | null = null;
+  const head: Node<T> = { value, prev: null, next: null };
 
-  for (const value of values) {
-    const node: Node<T> = {
-      value,
-      prev,
-      next: null
-    };
+  const tail = values.reduce((prev, value, index) => {
+    if (index > 0) {
+      const node: Node<T> = { value, prev, next: null };
 
-    if (prev) {
       prev.next = node;
+
+      return node;
     }
 
-    prev = node;
+    return prev;
+  }, head);
 
-    nodes.push(node);
-  }
-
-  const { length } = nodes;
-
-  return [nodes[0], nodes[length > 1 ? length - 1 : 0]];
+  return [head, tail];
 }

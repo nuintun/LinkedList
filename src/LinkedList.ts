@@ -207,7 +207,7 @@ export class LinkedList<T> {
     const size = this.#size;
     const startIndex = normalizeIndex(size, index);
 
-    if (startIndex + 1 <= size) {
+    if (startIndex < size) {
       const callback: Callback<T> = (_currentValue, currentIndex) => {
         return currentIndex === startIndex;
       };
@@ -227,7 +227,7 @@ export class LinkedList<T> {
     const size = this.#size;
     const startIndex = normalizeIndex(size, fromIndex);
 
-    if (startIndex + 1 <= size) {
+    if (startIndex < size) {
       const callback: Callback<T> = (currentValue, currentIndex) => {
         return currentValue === value && currentIndex >= startIndex;
       };
@@ -293,19 +293,70 @@ export class LinkedList<T> {
   }
 
   /**
+   * @method concat
+   * @param sources
+   */
+  concat(...sources: LinkedList<T>[]): LinkedList<T> {
+    const result = new LinkedList<T>();
+
+    sources.forEach(source => {
+      result.push(...source);
+    });
+
+    return result;
+  }
+
+  /**
    * @method map
    * @param callback
    * @param context
    */
   map<U>(callback: Callback<T, U>, context?: any): LinkedList<U> {
-    const mapped = new LinkedList<U>();
+    const result = new LinkedList<U>();
     const callbackBound = callback.bind(context);
 
     this.forEach((value, index, source) => {
-      mapped.push(callbackBound(value, index, source));
+      result.push(callbackBound(value, index, source));
     });
 
-    return mapped;
+    return result;
+  }
+
+  /**
+   * @method filter
+   * @param callback
+   * @param context
+   */
+  filter(callback: Callback<T>, context?: any): LinkedList<T> {
+    const result = new LinkedList<T>();
+    const callbackBound = callback.bind(context);
+
+    this.forEach((value, index, source) => {
+      if (callbackBound(value, index, source)) {
+        result.push(value);
+      }
+    });
+
+    return result;
+  }
+
+  /**
+   * @method reverse
+   */
+  reverse(): LinkedList<T> {
+    let current = this.#head;
+
+    while (current) {
+      const { prev, next } = current;
+
+      [current.prev, current.next] = [next, prev];
+
+      current = next;
+    }
+
+    [this.#head, this.#tail] = [this.#tail, this.#head];
+
+    return this;
   }
 
   /**
