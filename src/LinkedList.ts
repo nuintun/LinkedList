@@ -81,7 +81,7 @@ export class LinkedList<T> {
     const size = this.#size;
     const startIndex = normalizeIndex(size, fromIndex);
 
-    if (startIndex + 1 <= size) {
+    if (startIndex < size) {
       const callback: Callback<T> = (currentValue, currentIndex) => {
         return currentValue === value && currentIndex >= startIndex;
       };

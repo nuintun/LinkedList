@@ -457,7 +457,7 @@
     (_LinkedList_searchIndexOf = function _LinkedList_searchIndexOf(value, fromIndex, reverse) {
       const size = __classPrivateFieldGet(this, _LinkedList_size, 'f');
       const startIndex = normalizeIndex(size, fromIndex);
-      if (startIndex + 1 <= size) {
+      if (startIndex < size) {
         const callback = (currentValue, currentIndex) => {
           return currentValue === value && currentIndex >= startIndex;
         };
