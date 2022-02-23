@@ -3,7 +3,7 @@
  * @license MIT
  * @version 0.0.1
  * @author nuintun
- * @description A typescript array-like doubly linked list
+ * @description A typescript array-like doubly linked list.
  * @see https://github.com/nuintun/LinkedList#readme
  */
 
