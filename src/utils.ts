@@ -1,15 +1,6 @@
 import { Node } from './types';
 
 /**
- * @function isNull
- * @description 是否为空值
- * @param value 需要验证的值
- */
-export function isNull(value: any): value is null {
-  return value === null;
-}
-
-/**
  * @function normalizeIndex
  * @description 标准化开始索引
  * @param size 双链表长度
@@ -36,7 +27,7 @@ export function makeLinkedNode<T>(values: T[]): [head: Node<T>, tail: Node<T>] {
       next: null
     };
 
-    if (!isNull(prev)) {
+    if (prev) {
       prev.next = node;
     }
 

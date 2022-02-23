@@ -47,14 +47,6 @@
   }
 
   /**
-   * @function isNull
-   * @description 是否为空值
-   * @param value 需要验证的值
-   */
-  function isNull(value) {
-    return value === null;
-  }
-  /**
    * @function normalizeIndex
    * @description 标准化开始索引
    * @param size 双链表长度
@@ -77,7 +69,7 @@
         prev,
         next: null
       };
-      if (!isNull(prev)) {
+      if (prev) {
         prev.next = node;
       }
       prev = node;
@@ -125,11 +117,11 @@
       if (length < 1) return __classPrivateFieldGet(this, _LinkedList_size, 'f');
       const head = __classPrivateFieldGet(this, _LinkedList_head, 'f');
       const [first, last] = makeLinkedNode(values);
-      if (isNull(head)) {
-        __classPrivateFieldSet(this, _LinkedList_tail, last, 'f');
-      } else {
+      if (head) {
         head.prev = last;
         last.next = head;
+      } else {
+        __classPrivateFieldSet(this, _LinkedList_tail, last, 'f');
       }
       __classPrivateFieldSet(this, _LinkedList_head, first, 'f');
       __classPrivateFieldSet(this, _LinkedList_size, __classPrivateFieldGet(this, _LinkedList_size, 'f') + length, 'f');
@@ -141,12 +133,12 @@
     shift() {
       var _a;
       const head = __classPrivateFieldGet(this, _LinkedList_head, 'f');
-      if (!isNull(head)) {
+      if (head) {
         const { next } = head;
-        if (isNull(next)) {
-          __classPrivateFieldSet(this, _LinkedList_tail, next, 'f');
-        } else {
+        if (next) {
           next.prev = null;
+        } else {
+          __classPrivateFieldSet(this, _LinkedList_tail, next, 'f');
         }
         __classPrivateFieldSet(this, _LinkedList_head, next, 'f');
         __classPrivateFieldSet(
@@ -167,11 +159,11 @@
       if (length < 1) return __classPrivateFieldGet(this, _LinkedList_size, 'f');
       const tail = __classPrivateFieldGet(this, _LinkedList_tail, 'f');
       const [first, last] = makeLinkedNode(values);
-      if (isNull(tail)) {
-        __classPrivateFieldSet(this, _LinkedList_head, first, 'f');
-      } else {
+      if (tail) {
         first.prev = tail;
         tail.next = first;
+      } else {
+        __classPrivateFieldSet(this, _LinkedList_head, first, 'f');
       }
       __classPrivateFieldSet(this, _LinkedList_tail, last, 'f');
       __classPrivateFieldSet(this, _LinkedList_size, __classPrivateFieldGet(this, _LinkedList_size, 'f') + length, 'f');
@@ -183,12 +175,12 @@
     pop() {
       var _a;
       const tail = __classPrivateFieldGet(this, _LinkedList_tail, 'f');
-      if (!isNull(tail)) {
+      if (tail) {
         const { prev } = tail;
-        if (isNull(prev)) {
-          __classPrivateFieldSet(this, _LinkedList_head, prev, 'f');
-        } else {
+        if (prev) {
           prev.next = null;
+        } else {
+          __classPrivateFieldSet(this, _LinkedList_head, prev, 'f');
         }
         __classPrivateFieldSet(this, _LinkedList_tail, prev, 'f');
         __classPrivateFieldSet(
@@ -321,7 +313,7 @@
       let index = 0;
       let current = __classPrivateFieldGet(this, _LinkedList_head, 'f');
       const callbackBound = callback.bind(context);
-      while (!isNull(current)) {
+      while (current) {
         callbackBound(current.value, index, this);
         current = current.next;
         index++;
@@ -347,7 +339,7 @@
      */
     *values() {
       let current = __classPrivateFieldGet(this, _LinkedList_head, 'f');
-      while (!isNull(current)) {
+      while (current) {
         yield current.value;
         current = current.next;
       }
@@ -366,7 +358,7 @@
         if (reverse) {
           let index = size - 1;
           let current = __classPrivateFieldGet(this, _LinkedList_tail, 'f');
-          while (!isNull(current)) {
+          while (current) {
             if (callbackBound(current.value, index, this)) {
               return [current, index];
             } else {
@@ -377,7 +369,7 @@
         } else {
           let index = 0;
           let current = __classPrivateFieldGet(this, _LinkedList_head, 'f');
-          while (!isNull(current)) {
+          while (current) {
             if (callbackBound(current.value, index, this)) {
               return [current, index];
             } else {

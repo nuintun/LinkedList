@@ -1,5 +1,5 @@
 import { Callback, Node } from './types';
-import { isNull, makeLinkedNode, normalizeIndex } from './utils';
+import { makeLinkedNode, normalizeIndex } from './utils';
 
 export class LinkedList<T> {
   /**
@@ -42,7 +42,7 @@ export class LinkedList<T> {
         let index = size - 1;
         let current = this.#tail;
 
-        while (!isNull(current)) {
+        while (current) {
           if (callbackBound(current.value, index, this)) {
             return [current, index];
           } else {
@@ -55,7 +55,7 @@ export class LinkedList<T> {
         let index = 0;
         let current = this.#head;
 
-        while (!isNull(current)) {
+        while (current) {
           if (callbackBound(current.value, index, this)) {
             return [current, index];
           } else {
@@ -113,11 +113,11 @@ export class LinkedList<T> {
     const head = this.#head;
     const [first, last] = makeLinkedNode(values);
 
-    if (isNull(head)) {
-      this.#tail = last;
-    } else {
+    if (head) {
       head.prev = last;
       last.next = head;
+    } else {
+      this.#tail = last;
     }
 
     this.#head = first;
@@ -133,13 +133,13 @@ export class LinkedList<T> {
   shift(): T | undefined {
     const head = this.#head;
 
-    if (!isNull(head)) {
+    if (head) {
       const { next } = head;
 
-      if (isNull(next)) {
-        this.#tail = next;
-      } else {
+      if (next) {
         next.prev = null;
+      } else {
+        this.#tail = next;
       }
 
       this.#head = next;
@@ -162,11 +162,11 @@ export class LinkedList<T> {
     const tail = this.#tail;
     const [first, last] = makeLinkedNode(values);
 
-    if (isNull(tail)) {
-      this.#head = first;
-    } else {
+    if (tail) {
       first.prev = tail;
       tail.next = first;
+    } else {
+      this.#head = first;
     }
 
     this.#tail = last;
@@ -182,13 +182,13 @@ export class LinkedList<T> {
   pop(): T | undefined {
     const tail = this.#tail;
 
-    if (!isNull(tail)) {
+    if (tail) {
       const { prev } = tail;
 
-      if (isNull(prev)) {
-        this.#head = prev;
-      } else {
+      if (prev) {
         prev.next = null;
+      } else {
+        this.#head = prev;
       }
 
       this.#tail = prev;
@@ -319,7 +319,7 @@ export class LinkedList<T> {
 
     const callbackBound = callback.bind(context);
 
-    while (!isNull(current)) {
+    while (current) {
       callbackBound(current.value, index, this);
 
       current = current.next;
@@ -352,7 +352,7 @@ export class LinkedList<T> {
   *values(): Iterator<T> {
     let current = this.#head;
 
-    while (!isNull(current)) {
+    while (current) {
       yield current.value;
 
       current = current.next;
