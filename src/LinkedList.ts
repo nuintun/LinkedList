@@ -95,6 +95,15 @@ export class LinkedList<T> {
   }
 
   /**
+   * @method #clear
+   */
+  #clear() {
+    this.#size = 0;
+    this.#head = null;
+    this.#tail = null;
+  }
+
+  /**
    * @property length
    */
   get length(): number {
@@ -286,10 +295,57 @@ export class LinkedList<T> {
    * @param deleteLength
    * @param values
    */
-  splice(fromIndex: number, deleteLength: number, ...values: T[]): T | undefined {
-    console.log(fromIndex, deleteLength, values);
+  splice(fromIndex: number, deleteLength: number, ...values: T[]): T[] {
+    const itmes = [...this];
+    const removed = itmes.splice(fromIndex, deleteLength, ...values);
 
-    return undefined;
+    this.#clear();
+    this.push(...itmes);
+
+    return removed;
+
+    // const size = this.#size;
+
+    // if (size > 0) {
+    //   const startIndex = normalizeIndex(size, fromIndex);
+
+    //   if (startIndex < size) {
+    //     const removed: T[] = [];
+    //     const [node] = this.#search((_currentValue, currentIndex) => {
+    //       return currentIndex === startIndex;
+    //     }, startIndex / 2 > size) as [Node<T>, number];
+    //     const removeLength = Math.min(size - startIndex, Math.max(0, deleteLength));
+
+    //     if (removeLength) {
+    //       let count = removeLength;
+    //       let deleted: Node<T> | null = node;
+
+    //       while (count-- > 0 && deleted) {
+    //         removed.push(deleted.value);
+
+    //         deleted = deleted.next;
+    //       }
+    //     }
+
+    //     return removed;
+    //   }
+    // }
+
+    // this.push(...values);
+
+    // return [];
+  }
+
+  /**
+   * @method slice
+   * @param fromIndex
+   * @param toIndex
+   */
+  slice(fromIndex?: number, toIndex?: number): LinkedList<T> {
+    const itmes = [...this];
+    const saved = itmes.slice(fromIndex, toIndex);
+
+    return new LinkedList<T>(saved);
   }
 
   /**
@@ -367,8 +423,8 @@ export class LinkedList<T> {
   every(callback: Callback<T>, context?: any): boolean {
     const callbackBound = callback.bind(context);
 
-    const [, index] = this.#search((value, index, source) => {
-      return !callbackBound(value, index, source);
+    const [, index] = this.#search((currentValue, currentIndex, source) => {
+      return !callbackBound(currentValue, currentIndex, source);
     });
 
     return index < 0;

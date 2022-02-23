@@ -79,7 +79,8 @@
     _LinkedList_head,
     _LinkedList_tail,
     _LinkedList_search,
-    _LinkedList_searchIndexOf;
+    _LinkedList_searchIndexOf,
+    _LinkedList_clear;
   class LinkedList {
     constructor(iterable = []) {
       _LinkedList_instances.add(this);
@@ -283,8 +284,43 @@
      * @param values
      */
     splice(fromIndex, deleteLength, ...values) {
-      console.log(fromIndex, deleteLength, values);
-      return undefined;
+      const itmes = [...this];
+      const removed = itmes.splice(fromIndex, deleteLength, ...values);
+      __classPrivateFieldGet(this, _LinkedList_instances, 'm', _LinkedList_clear).call(this);
+      this.push(...itmes);
+      return removed;
+      // const size = this.#size;
+      // if (size > 0) {
+      //   const startIndex = normalizeIndex(size, fromIndex);
+      //   if (startIndex < size) {
+      //     const removed: T[] = [];
+      //     const [node] = this.#search((_currentValue, currentIndex) => {
+      //       return currentIndex === startIndex;
+      //     }, startIndex / 2 > size) as [Node<T>, number];
+      //     const removeLength = Math.min(size - startIndex, Math.max(0, deleteLength));
+      //     if (removeLength) {
+      //       let count = removeLength;
+      //       let deleted: Node<T> | null = node;
+      //       while (count-- > 0 && deleted) {
+      //         removed.push(deleted.value);
+      //         deleted = deleted.next;
+      //       }
+      //     }
+      //     return removed;
+      //   }
+      // }
+      // this.push(...values);
+      // return [];
+    }
+    /**
+     * @method slice
+     * @param fromIndex
+     * @param toIndex
+     */
+    slice(fromIndex, toIndex) {
+      const itmes = [...this];
+      const saved = itmes.slice(fromIndex, toIndex);
+      return new LinkedList(saved);
     }
     /**
      * @method concat
@@ -361,8 +397,8 @@
       const callbackBound = callback.bind(context);
       const [, index] = __classPrivateFieldGet(this, _LinkedList_instances, 'm', _LinkedList_search).call(
         this,
-        (value, index, source) => {
-          return !callbackBound(value, index, source);
+        (currentValue, currentIndex, source) => {
+          return !callbackBound(currentValue, currentIndex, source);
         }
       );
       return index < 0;
@@ -469,6 +505,11 @@
         return index;
       }
       return -1;
+    }),
+    (_LinkedList_clear = function _LinkedList_clear() {
+      __classPrivateFieldSet(this, _LinkedList_size, 0, 'f');
+      __classPrivateFieldSet(this, _LinkedList_head, null, 'f');
+      __classPrivateFieldSet(this, _LinkedList_tail, null, 'f');
     }),
     Symbol.iterator)]() {
       return this.values();
