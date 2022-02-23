@@ -63,6 +63,29 @@
   function normalizeIndex(size, fromIndex = 0) {
     return fromIndex < 0 ? Math.max(0, size + fromIndex) : fromIndex;
   }
+  /**
+   * @function makeLinkedNode
+   * @description 根据值列表生产双链表节点
+   * @param values 值列表
+   */
+  function makeLinkedNode(values) {
+    const nodes = [];
+    let prev = null;
+    for (const value of values) {
+      const node = {
+        value,
+        prev,
+        next: null
+      };
+      if (!isNull(prev)) {
+        prev.next = node;
+      }
+      prev = node;
+      nodes.push(node);
+    }
+    const { length } = nodes;
+    return [nodes[0], nodes[length > 1 ? length - 1 : 0]];
+  }
 
   var _LinkedList_instances,
     _LinkedList_size,
@@ -98,27 +121,18 @@
      * @param values
      */
     unshift(...values) {
-      var _a;
-      for (const value of values) {
-        const head = __classPrivateFieldGet(this, _LinkedList_head, 'f');
-        const node = {
-          value,
-          prev: null,
-          next: head
-        };
-        if (isNull(head)) {
-          __classPrivateFieldSet(this, _LinkedList_tail, node, 'f');
-        } else {
-          head.prev = node;
-        }
-        __classPrivateFieldSet(this, _LinkedList_head, node, 'f');
-        __classPrivateFieldSet(
-          this,
-          _LinkedList_size,
-          ((_a = __classPrivateFieldGet(this, _LinkedList_size, 'f')), _a++, _a),
-          'f'
-        );
+      const { length } = values;
+      if (length < 1) return __classPrivateFieldGet(this, _LinkedList_size, 'f');
+      const head = __classPrivateFieldGet(this, _LinkedList_head, 'f');
+      const [first, last] = makeLinkedNode(values);
+      if (isNull(head)) {
+        __classPrivateFieldSet(this, _LinkedList_tail, last, 'f');
+      } else {
+        head.prev = last;
+        last.next = head;
       }
+      __classPrivateFieldSet(this, _LinkedList_head, first, 'f');
+      __classPrivateFieldSet(this, _LinkedList_size, __classPrivateFieldGet(this, _LinkedList_size, 'f') + length, 'f');
       return __classPrivateFieldGet(this, _LinkedList_size, 'f');
     }
     /**
@@ -149,27 +163,18 @@
      * @param values
      */
     push(...values) {
-      var _a;
-      for (const value of values) {
-        const tail = __classPrivateFieldGet(this, _LinkedList_tail, 'f');
-        const node = {
-          value,
-          prev: tail,
-          next: null
-        };
-        if (isNull(tail)) {
-          __classPrivateFieldSet(this, _LinkedList_head, node, 'f');
-        } else {
-          tail.next = node;
-        }
-        __classPrivateFieldSet(this, _LinkedList_tail, node, 'f');
-        __classPrivateFieldSet(
-          this,
-          _LinkedList_size,
-          ((_a = __classPrivateFieldGet(this, _LinkedList_size, 'f')), _a++, _a),
-          'f'
-        );
+      const { length } = values;
+      if (length < 1) return __classPrivateFieldGet(this, _LinkedList_size, 'f');
+      const tail = __classPrivateFieldGet(this, _LinkedList_tail, 'f');
+      const [first, last] = makeLinkedNode(values);
+      if (isNull(tail)) {
+        __classPrivateFieldSet(this, _LinkedList_head, first, 'f');
+      } else {
+        first.prev = tail;
+        tail.next = first;
       }
+      __classPrivateFieldSet(this, _LinkedList_tail, last, 'f');
+      __classPrivateFieldSet(this, _LinkedList_size, __classPrivateFieldGet(this, _LinkedList_size, 'f') + length, 'f');
       return __classPrivateFieldGet(this, _LinkedList_size, 'f');
     }
     /**
@@ -300,14 +305,12 @@
      * @param context
      */
     map(callback, context) {
-      let index = 0;
-      let current = __classPrivateFieldGet(this, _LinkedList_head, 'f');
+      const mapped = new LinkedList();
       const callbackBound = callback.bind(context);
-      while (!isNull(current)) {
-        current.value = callbackBound(current.value, index, this);
-        current = current.next;
-        index++;
-      }
+      this.forEach((value, index, source) => {
+        mapped.push(callbackBound(value, index, source));
+      });
+      return mapped;
     }
     /**
      * @method forEach

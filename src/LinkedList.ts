@@ -1,5 +1,5 @@
 import { Callback, Node } from './types';
-import { isNull, normalizeIndex } from './utils';
+import { isNull, makeLinkedNode, normalizeIndex } from './utils';
 
 export class LinkedList<T> {
   /**
@@ -104,24 +104,23 @@ export class LinkedList<T> {
    * @param values
    */
   unshift(...values: T[]): number {
-    for (const value of values) {
-      const head = this.#head;
-      const node: Node<T> = {
-        value,
-        prev: null,
-        next: head
-      };
+    const { length } = values;
 
-      if (isNull(head)) {
-        this.#tail = node;
-      } else {
-        head.prev = node;
-      }
+    if (length < 1) return this.#size;
 
-      this.#head = node;
+    const head = this.#head;
+    const [first, last] = makeLinkedNode(values);
 
-      this.#size++;
+    if (isNull(head)) {
+      this.#tail = last;
+    } else {
+      head.prev = last;
+      last.next = head;
     }
+
+    this.#head = first;
+
+    this.#size += length;
 
     return this.#size;
   }
@@ -154,24 +153,23 @@ export class LinkedList<T> {
    * @param values
    */
   push(...values: T[]): number {
-    for (const value of values) {
-      const tail = this.#tail;
-      const node: Node<T> = {
-        value,
-        prev: tail,
-        next: null
-      };
+    const { length } = values;
 
-      if (isNull(tail)) {
-        this.#head = node;
-      } else {
-        tail.next = node;
-      }
+    if (length < 1) return this.#size;
 
-      this.#tail = node;
+    const tail = this.#tail;
+    const [first, last] = makeLinkedNode(values);
 
-      this.#size++;
+    if (isNull(tail)) {
+      this.#head = first;
+    } else {
+      first.prev = tail;
+      tail.next = first;
     }
+
+    this.#tail = last;
+
+    this.#size += length;
 
     return this.#size;
   }
@@ -297,19 +295,15 @@ export class LinkedList<T> {
    * @param callback
    * @param context
    */
-  map(callback: Callback<T, T>, context?: any): void {
-    let index = 0;
-    let current = this.#head;
-
+  map<U>(callback: Callback<T, U>, context?: any): LinkedList<U> {
+    const mapped = new LinkedList<U>();
     const callbackBound = callback.bind(context);
 
-    while (!isNull(current)) {
-      current.value = callbackBound(current.value, index, this);
+    this.forEach((value, index, source) => {
+      mapped.push(callbackBound(value, index, source));
+    });
 
-      current = current.next;
-
-      index++;
-    }
+    return mapped;
   }
 
   /**
