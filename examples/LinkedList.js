@@ -353,6 +353,31 @@
       return this;
     }
     /**
+     * @method every
+     * @param callback
+     * @param context
+     */
+    every(callback, context) {
+      const callbackBound = callback.bind(context);
+      const [, index] = __classPrivateFieldGet(this, _LinkedList_instances, 'm', _LinkedList_search).call(
+        this,
+        (value, index, source) => {
+          return !callbackBound(value, index, source);
+        }
+      );
+      return index < 0;
+    }
+    /**
+     * @method some
+     * @param callback
+     * @param context
+     */
+    some(callback, context) {
+      const callbackBound = callback.bind(context);
+      const [, index] = __classPrivateFieldGet(this, _LinkedList_instances, 'm', _LinkedList_search).call(this, callbackBound);
+      return index >= 0;
+    }
+    /**
      * @method forEach
      * @param callback
      * @param context

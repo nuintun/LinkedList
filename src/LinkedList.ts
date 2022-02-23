@@ -360,6 +360,34 @@ export class LinkedList<T> {
   }
 
   /**
+   * @method every
+   * @param callback
+   * @param context
+   */
+  every(callback: Callback<T>, context?: any): boolean {
+    const callbackBound = callback.bind(context);
+
+    const [, index] = this.#search((value, index, source) => {
+      return !callbackBound(value, index, source);
+    });
+
+    return index < 0;
+  }
+
+  /**
+   * @method some
+   * @param callback
+   * @param context
+   */
+  some(callback: Callback<T>, context?: any): boolean {
+    const callbackBound = callback.bind(context);
+
+    const [, index] = this.#search(callbackBound);
+
+    return index >= 0;
+  }
+
+  /**
    * @method forEach
    * @param callback
    * @param context
