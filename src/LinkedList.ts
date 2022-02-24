@@ -1,5 +1,5 @@
 import { Callback, Node } from './types';
-import { makeLinkedNode, normalizeIndex } from './utils';
+import { createNode, findNodeOffset, normalizeIndex } from './utils';
 
 export class LinkedList<T> {
   /**
@@ -95,15 +95,6 @@ export class LinkedList<T> {
   }
 
   /**
-   * @method #clear
-   */
-  #clear() {
-    this.#size = 0;
-    this.#head = null;
-    this.#tail = null;
-  }
-
-  /**
    * @property length
    */
   get length(): number {
@@ -115,12 +106,12 @@ export class LinkedList<T> {
    * @param values
    */
   unshift(...values: T[]): number {
-    const { length } = values;
+    const { length: addedLength } = values;
 
-    if (length < 1) return this.#size;
+    if (addedLength < 1) return this.#size;
 
     const head = this.#head;
-    const [first, last] = makeLinkedNode(values);
+    const [first, last] = createNode(values);
 
     if (head) {
       head.prev = last;
@@ -131,7 +122,7 @@ export class LinkedList<T> {
 
     this.#head = first;
 
-    this.#size += length;
+    this.#size += addedLength;
 
     return this.#size;
   }
@@ -164,12 +155,12 @@ export class LinkedList<T> {
    * @param values
    */
   push(...values: T[]): number {
-    const { length } = values;
+    const { length: addedLength } = values;
 
-    if (length < 1) return this.#size;
+    if (addedLength < 1) return this.#size;
 
     const tail = this.#tail;
-    const [first, last] = makeLinkedNode(values);
+    const [first, last] = createNode(values);
 
     if (tail) {
       first.prev = tail;
@@ -180,7 +171,7 @@ export class LinkedList<T> {
 
     this.#tail = last;
 
-    this.#size += length;
+    this.#size += addedLength;
 
     return this.#size;
   }
@@ -296,44 +287,59 @@ export class LinkedList<T> {
    * @param values
    */
   splice(fromIndex: number, deleteLength: number, ...values: T[]): T[] {
-    const itmes = [...this];
-    const removed = itmes.splice(fromIndex, deleteLength, ...values);
+    const size = this.#size;
 
-    this.#clear();
-    this.push(...itmes);
+    if (size > 0) {
+      const startIndex = normalizeIndex(size, fromIndex);
 
-    return removed;
+      if (startIndex < size) {
+        const [start] = this.#search((_currentValue, currentIndex) => {
+          return currentIndex === startIndex;
+        }, startIndex / 2 > size) as [Node<T>, number];
 
-    // const size = this.#size;
+        const head = start.prev;
+        const [tail, removed] = findNodeOffset(start, deleteLength);
 
-    // if (size > 0) {
-    //   const startIndex = normalizeIndex(size, fromIndex);
+        this.#size -= removed.length;
 
-    //   if (startIndex < size) {
-    //     const removed: T[] = [];
-    //     const [node] = this.#search((_currentValue, currentIndex) => {
-    //       return currentIndex === startIndex;
-    //     }, startIndex / 2 > size) as [Node<T>, number];
-    //     const removeLength = Math.min(size - startIndex, Math.max(0, deleteLength));
+        if (head && tail) {
+          const { length: addedLength } = values;
 
-    //     if (removeLength) {
-    //       let count = removeLength;
-    //       let deleted: Node<T> | null = node;
+          if (addedLength > 0) {
+            const [first, last] = createNode(values);
 
-    //       while (count-- > 0 && deleted) {
-    //         removed.push(deleted.value);
+            [head.next, tail.prev] = [first, last];
+            [first.prev, last.next] = [head, tail];
 
-    //         deleted = deleted.next;
-    //       }
-    //     }
+            this.#size += addedLength - removed.length;
+          } else {
+            head.next = tail;
+            tail.prev = head;
+          }
 
-    //     return removed;
-    //   }
-    // }
+          return removed;
+        } else if (tail) {
+          tail.prev = null;
 
-    // this.push(...values);
+          this.#head = tail;
 
-    // return [];
+          this.unshift(...values);
+
+          return removed;
+        } else if (head) {
+          head.next = null;
+
+          this.#tail = head;
+        } else {
+          this.#head = head;
+          this.#tail = tail;
+        }
+      }
+    }
+
+    this.push(...values);
+
+    return [];
   }
 
   /**

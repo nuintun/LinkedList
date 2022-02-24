@@ -56,11 +56,11 @@
     return fromIndex < 0 ? Math.max(0, size + fromIndex) : fromIndex;
   }
   /**
-   * @function makeLinkedNode
+   * @function createNode
    * @description 根据值列表生产双链表节点
    * @param values 值列表
    */
-  function makeLinkedNode(values) {
+  function createNode(values) {
     const [value] = values;
     const head = { value, prev: null, next: null };
     const tail = values.reduce((prev, value, index) => {
@@ -73,14 +73,28 @@
     }, head);
     return [head, tail];
   }
+  /**
+   * @function findNodeOffset
+   * @description 查找开始节点偏移量后的节点
+   * @param node 开始节点
+   * @param offset 节点偏移量
+   */
+  function findNodeOffset(node, offset) {
+    const values = [];
+    let current = node;
+    while (offset-- > 0 && current) {
+      values.push(current.value);
+      current = current.next;
+    }
+    return [current, values];
+  }
 
   var _LinkedList_instances,
     _LinkedList_size,
     _LinkedList_head,
     _LinkedList_tail,
     _LinkedList_search,
-    _LinkedList_searchIndexOf,
-    _LinkedList_clear;
+    _LinkedList_searchIndexOf;
   class LinkedList {
     constructor(iterable = []) {
       _LinkedList_instances.add(this);
@@ -109,10 +123,10 @@
      * @param values
      */
     unshift(...values) {
-      const { length } = values;
-      if (length < 1) return __classPrivateFieldGet(this, _LinkedList_size, 'f');
+      const { length: addedLength } = values;
+      if (addedLength < 1) return __classPrivateFieldGet(this, _LinkedList_size, 'f');
       const head = __classPrivateFieldGet(this, _LinkedList_head, 'f');
-      const [first, last] = makeLinkedNode(values);
+      const [first, last] = createNode(values);
       if (head) {
         head.prev = last;
         last.next = head;
@@ -120,7 +134,7 @@
         __classPrivateFieldSet(this, _LinkedList_tail, last, 'f');
       }
       __classPrivateFieldSet(this, _LinkedList_head, first, 'f');
-      __classPrivateFieldSet(this, _LinkedList_size, __classPrivateFieldGet(this, _LinkedList_size, 'f') + length, 'f');
+      __classPrivateFieldSet(this, _LinkedList_size, __classPrivateFieldGet(this, _LinkedList_size, 'f') + addedLength, 'f');
       return __classPrivateFieldGet(this, _LinkedList_size, 'f');
     }
     /**
@@ -151,10 +165,10 @@
      * @param values
      */
     push(...values) {
-      const { length } = values;
-      if (length < 1) return __classPrivateFieldGet(this, _LinkedList_size, 'f');
+      const { length: addedLength } = values;
+      if (addedLength < 1) return __classPrivateFieldGet(this, _LinkedList_size, 'f');
       const tail = __classPrivateFieldGet(this, _LinkedList_tail, 'f');
-      const [first, last] = makeLinkedNode(values);
+      const [first, last] = createNode(values);
       if (tail) {
         first.prev = tail;
         tail.next = first;
@@ -162,7 +176,7 @@
         __classPrivateFieldSet(this, _LinkedList_head, first, 'f');
       }
       __classPrivateFieldSet(this, _LinkedList_tail, last, 'f');
-      __classPrivateFieldSet(this, _LinkedList_size, __classPrivateFieldGet(this, _LinkedList_size, 'f') + length, 'f');
+      __classPrivateFieldSet(this, _LinkedList_size, __classPrivateFieldGet(this, _LinkedList_size, 'f') + addedLength, 'f');
       return __classPrivateFieldGet(this, _LinkedList_size, 'f');
     }
     /**
@@ -284,33 +298,58 @@
      * @param values
      */
     splice(fromIndex, deleteLength, ...values) {
-      const itmes = [...this];
-      const removed = itmes.splice(fromIndex, deleteLength, ...values);
-      __classPrivateFieldGet(this, _LinkedList_instances, 'm', _LinkedList_clear).call(this);
-      this.push(...itmes);
-      return removed;
-      // const size = this.#size;
-      // if (size > 0) {
-      //   const startIndex = normalizeIndex(size, fromIndex);
-      //   if (startIndex < size) {
-      //     const removed: T[] = [];
-      //     const [node] = this.#search((_currentValue, currentIndex) => {
-      //       return currentIndex === startIndex;
-      //     }, startIndex / 2 > size) as [Node<T>, number];
-      //     const removeLength = Math.min(size - startIndex, Math.max(0, deleteLength));
-      //     if (removeLength) {
-      //       let count = removeLength;
-      //       let deleted: Node<T> | null = node;
-      //       while (count-- > 0 && deleted) {
-      //         removed.push(deleted.value);
-      //         deleted = deleted.next;
-      //       }
-      //     }
-      //     return removed;
-      //   }
-      // }
-      // this.push(...values);
-      // return [];
+      const size = __classPrivateFieldGet(this, _LinkedList_size, 'f');
+      if (size > 0) {
+        const startIndex = normalizeIndex(size, fromIndex);
+        if (startIndex < size) {
+          const [start] = __classPrivateFieldGet(this, _LinkedList_instances, 'm', _LinkedList_search).call(
+            this,
+            (_currentValue, currentIndex) => {
+              return currentIndex === startIndex;
+            },
+            startIndex / 2 > size
+          );
+          const head = start.prev;
+          const [tail, removed] = findNodeOffset(start, deleteLength);
+          __classPrivateFieldSet(
+            this,
+            _LinkedList_size,
+            __classPrivateFieldGet(this, _LinkedList_size, 'f') - removed.length,
+            'f'
+          );
+          if (head && tail) {
+            const { length: addedLength } = values;
+            if (addedLength > 0) {
+              const [first, last] = createNode(values);
+              [head.next, tail.prev] = [first, last];
+              [first.prev, last.next] = [head, tail];
+              __classPrivateFieldSet(
+                this,
+                _LinkedList_size,
+                __classPrivateFieldGet(this, _LinkedList_size, 'f') + (addedLength - removed.length),
+                'f'
+              );
+            } else {
+              head.next = tail;
+              tail.prev = head;
+            }
+            return removed;
+          } else if (tail) {
+            tail.prev = null;
+            __classPrivateFieldSet(this, _LinkedList_head, tail, 'f');
+            this.unshift(...values);
+            return removed;
+          } else if (head) {
+            head.next = null;
+            __classPrivateFieldSet(this, _LinkedList_tail, head, 'f');
+          } else {
+            __classPrivateFieldSet(this, _LinkedList_head, head, 'f');
+            __classPrivateFieldSet(this, _LinkedList_tail, tail, 'f');
+          }
+        }
+      }
+      this.push(...values);
+      return [];
     }
     /**
      * @method slice
@@ -505,11 +544,6 @@
         return index;
       }
       return -1;
-    }),
-    (_LinkedList_clear = function _LinkedList_clear() {
-      __classPrivateFieldSet(this, _LinkedList_size, 0, 'f');
-      __classPrivateFieldSet(this, _LinkedList_head, null, 'f');
-      __classPrivateFieldSet(this, _LinkedList_tail, null, 'f');
     }),
     Symbol.iterator)]() {
       return this.values();
