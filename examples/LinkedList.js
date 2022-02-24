@@ -89,12 +89,7 @@
     return [current, values];
   }
 
-  var _LinkedList_instances,
-    _LinkedList_size,
-    _LinkedList_head,
-    _LinkedList_tail,
-    _LinkedList_search,
-    _LinkedList_searchIndexOf;
+  var _LinkedList_instances, _LinkedList_size, _LinkedList_head, _LinkedList_tail, _LinkedList_find, _LinkedList_indexOf;
   class LinkedList {
     constructor(iterable = []) {
       _LinkedList_instances.add(this);
@@ -113,48 +108,50 @@
       this.push(...iterable);
     }
     /**
-     * @property length
-     */
-    get length() {
-      return __classPrivateFieldGet(this, _LinkedList_size, 'f');
-    }
-    /**
      * @method unshift
      * @param values
      */
     unshift(...values) {
+      var _a;
+      const self = this;
       const { length: addedLength } = values;
-      if (addedLength < 1) return __classPrivateFieldGet(this, _LinkedList_size, 'f');
-      const head = __classPrivateFieldGet(this, _LinkedList_head, 'f');
+      if (addedLength < 1) return __classPrivateFieldGet(self, _LinkedList_size, 'f');
+      const head = __classPrivateFieldGet(self, _LinkedList_head, 'f');
       const [first, last] = createNode(values);
       if (head) {
         head.prev = last;
         last.next = head;
       } else {
-        __classPrivateFieldSet(this, _LinkedList_tail, last, 'f');
+        __classPrivateFieldSet(self, _LinkedList_tail, last, 'f');
       }
-      __classPrivateFieldSet(this, _LinkedList_head, first, 'f');
-      __classPrivateFieldSet(this, _LinkedList_size, __classPrivateFieldGet(this, _LinkedList_size, 'f') + addedLength, 'f');
-      return __classPrivateFieldGet(this, _LinkedList_size, 'f');
+      __classPrivateFieldSet(self, _LinkedList_head, first, 'f');
+      __classPrivateFieldSet(
+        (_a = self),
+        _LinkedList_size,
+        __classPrivateFieldGet(_a, _LinkedList_size, 'f') + addedLength,
+        'f'
+      );
+      return __classPrivateFieldGet(self, _LinkedList_size, 'f');
     }
     /**
      * @method shift
      */
     shift() {
-      var _a;
-      const head = __classPrivateFieldGet(this, _LinkedList_head, 'f');
+      var _a, _b;
+      const self = this;
+      const head = __classPrivateFieldGet(self, _LinkedList_head, 'f');
       if (head) {
         const { next } = head;
         if (next) {
           next.prev = null;
         } else {
-          __classPrivateFieldSet(this, _LinkedList_tail, next, 'f');
+          __classPrivateFieldSet(self, _LinkedList_tail, next, 'f');
         }
-        __classPrivateFieldSet(this, _LinkedList_head, next, 'f');
+        __classPrivateFieldSet(self, _LinkedList_head, next, 'f');
         __classPrivateFieldSet(
-          this,
+          (_a = self),
           _LinkedList_size,
-          ((_a = __classPrivateFieldGet(this, _LinkedList_size, 'f')), _a--, _a),
+          ((_b = __classPrivateFieldGet(_a, _LinkedList_size, 'f')), _b--, _b),
           'f'
         );
         return head.value;
@@ -165,38 +162,46 @@
      * @param values
      */
     push(...values) {
+      var _a;
+      const self = this;
       const { length: addedLength } = values;
-      if (addedLength < 1) return __classPrivateFieldGet(this, _LinkedList_size, 'f');
-      const tail = __classPrivateFieldGet(this, _LinkedList_tail, 'f');
+      if (addedLength < 1) return __classPrivateFieldGet(self, _LinkedList_size, 'f');
+      const tail = __classPrivateFieldGet(self, _LinkedList_tail, 'f');
       const [first, last] = createNode(values);
       if (tail) {
         first.prev = tail;
         tail.next = first;
       } else {
-        __classPrivateFieldSet(this, _LinkedList_head, first, 'f');
+        __classPrivateFieldSet(self, _LinkedList_head, first, 'f');
       }
-      __classPrivateFieldSet(this, _LinkedList_tail, last, 'f');
-      __classPrivateFieldSet(this, _LinkedList_size, __classPrivateFieldGet(this, _LinkedList_size, 'f') + addedLength, 'f');
-      return __classPrivateFieldGet(this, _LinkedList_size, 'f');
+      __classPrivateFieldSet(self, _LinkedList_tail, last, 'f');
+      __classPrivateFieldSet(
+        (_a = self),
+        _LinkedList_size,
+        __classPrivateFieldGet(_a, _LinkedList_size, 'f') + addedLength,
+        'f'
+      );
+      return __classPrivateFieldGet(self, _LinkedList_size, 'f');
     }
     /**
      * @method pop
      */
     pop() {
-      var _a;
-      const tail = __classPrivateFieldGet(this, _LinkedList_tail, 'f');
+      var _a, _b;
+      const self = this;
+      const tail = __classPrivateFieldGet(self, _LinkedList_tail, 'f');
       if (tail) {
         const { prev } = tail;
         if (prev) {
           prev.next = null;
         } else {
-          __classPrivateFieldSet(this, _LinkedList_head, prev, 'f');
+          __classPrivateFieldSet(self, _LinkedList_head, prev, 'f');
         }
-        __classPrivateFieldSet(this, _LinkedList_tail, prev, 'f');
+        __classPrivateFieldSet(self, _LinkedList_tail, prev, 'f');
         __classPrivateFieldSet(
-          this,
+          (_a = self),
           _LinkedList_size,
-          ((_a = __classPrivateFieldGet(this, _LinkedList_size, 'f')), _a--, _a),
+          ((_b = __classPrivateFieldGet(_a, _LinkedList_size, 'f')), _b--, _b),
           'f'
         );
         return tail.value;
@@ -207,14 +212,15 @@
      * @param index
      */
     at(index) {
-      const size = __classPrivateFieldGet(this, _LinkedList_size, 'f');
+      const self = this;
+      const size = __classPrivateFieldGet(self, _LinkedList_size, 'f');
       const startIndex = normalizeIndex(size, index);
       if (startIndex < size) {
         const callback = (_currentValue, currentIndex) => {
           return currentIndex === startIndex;
         };
-        const [node] = __classPrivateFieldGet(this, _LinkedList_instances, 'm', _LinkedList_search).call(
-          this,
+        const [node] = __classPrivateFieldGet(self, _LinkedList_instances, 'm', _LinkedList_find).call(
+          self,
           callback,
           startIndex > size / 2
         );
@@ -227,14 +233,15 @@
      * @param fromIndex
      */
     includes(value, fromIndex) {
-      const size = __classPrivateFieldGet(this, _LinkedList_size, 'f');
+      const self = this;
+      const size = __classPrivateFieldGet(self, _LinkedList_size, 'f');
       const startIndex = normalizeIndex(size, fromIndex);
       if (startIndex < size) {
         const callback = (currentValue, currentIndex) => {
           return currentValue === value && currentIndex >= startIndex;
         };
-        const [, index] = __classPrivateFieldGet(this, _LinkedList_instances, 'm', _LinkedList_search).call(
-          this,
+        const [, index] = __classPrivateFieldGet(self, _LinkedList_instances, 'm', _LinkedList_find).call(
+          self,
           callback,
           startIndex > size / 2
         );
@@ -248,7 +255,7 @@
      * @param fromIndex
      */
     indexOf(value, fromIndex) {
-      return __classPrivateFieldGet(this, _LinkedList_instances, 'm', _LinkedList_searchIndexOf).call(this, value, fromIndex);
+      return __classPrivateFieldGet(this, _LinkedList_instances, 'm', _LinkedList_indexOf).call(this, value, fromIndex);
     }
     /**
      * @method lastIndexOf
@@ -256,12 +263,7 @@
      * @param fromIndex
      */
     lastIndexOf(value, fromIndex) {
-      return __classPrivateFieldGet(this, _LinkedList_instances, 'm', _LinkedList_searchIndexOf).call(
-        this,
-        value,
-        fromIndex,
-        true
-      );
+      return __classPrivateFieldGet(this, _LinkedList_instances, 'm', _LinkedList_indexOf).call(this, value, fromIndex, true);
     }
     /**
      * @method find
@@ -269,7 +271,7 @@
      * @param context
      */
     find(callback, context) {
-      const [node] = __classPrivateFieldGet(this, _LinkedList_instances, 'm', _LinkedList_search).call(
+      const [node] = __classPrivateFieldGet(this, _LinkedList_instances, 'm', _LinkedList_find).call(
         this,
         callback,
         false,
@@ -283,7 +285,7 @@
      * @param context
      */
     findIndex(callback, context) {
-      const [, index] = __classPrivateFieldGet(this, _LinkedList_instances, 'm', _LinkedList_search).call(
+      const [, index] = __classPrivateFieldGet(this, _LinkedList_instances, 'm', _LinkedList_find).call(
         this,
         callback,
         false,
@@ -298,12 +300,14 @@
      * @param values
      */
     splice(fromIndex, deleteLength = __classPrivateFieldGet(this, _LinkedList_size, 'f'), ...values) {
-      const size = __classPrivateFieldGet(this, _LinkedList_size, 'f');
+      var _a, _b;
+      const self = this;
+      const size = __classPrivateFieldGet(self, _LinkedList_size, 'f');
       if (size > 0) {
         const startIndex = normalizeIndex(size, fromIndex);
         if (startIndex < size) {
-          const [start] = __classPrivateFieldGet(this, _LinkedList_instances, 'm', _LinkedList_search).call(
-            this,
+          const [start] = __classPrivateFieldGet(self, _LinkedList_instances, 'm', _LinkedList_find).call(
+            self,
             (_currentValue, currentIndex) => {
               return currentIndex === startIndex;
             },
@@ -312,9 +316,9 @@
           const head = start.prev;
           const [tail, removed] = findNodeOffset(start, deleteLength);
           __classPrivateFieldSet(
-            this,
+            (_a = self),
             _LinkedList_size,
-            __classPrivateFieldGet(this, _LinkedList_size, 'f') - removed.length,
+            __classPrivateFieldGet(_a, _LinkedList_size, 'f') - removed.length,
             'f'
           );
           if (head && tail) {
@@ -324,9 +328,9 @@
               [head.next, tail.prev] = [first, last];
               [first.prev, last.next] = [head, tail];
               __classPrivateFieldSet(
-                this,
+                (_b = self),
                 _LinkedList_size,
-                __classPrivateFieldGet(this, _LinkedList_size, 'f') + (addedLength - removed.length),
+                __classPrivateFieldGet(_b, _LinkedList_size, 'f') + addedLength,
                 'f'
               );
             } else {
@@ -336,21 +340,21 @@
             return removed;
           } else if (tail) {
             tail.prev = null;
-            __classPrivateFieldSet(this, _LinkedList_head, tail, 'f');
-            this.unshift(...values);
+            __classPrivateFieldSet(self, _LinkedList_head, tail, 'f');
+            self.unshift(...values);
             return removed;
           } else if (head) {
             head.next = null;
-            __classPrivateFieldSet(this, _LinkedList_tail, head, 'f');
+            __classPrivateFieldSet(self, _LinkedList_tail, head, 'f');
           } else {
-            __classPrivateFieldSet(this, _LinkedList_head, head, 'f');
-            __classPrivateFieldSet(this, _LinkedList_tail, tail, 'f');
+            __classPrivateFieldSet(self, _LinkedList_head, head, 'f');
+            __classPrivateFieldSet(self, _LinkedList_tail, tail, 'f');
           }
-          this.push(...values);
+          self.push(...values);
           return removed;
         }
       }
-      this.push(...values);
+      self.push(...values);
       return [];
     }
     /**
@@ -358,10 +362,38 @@
      * @param fromIndex
      * @param toIndex
      */
-    slice(fromIndex, toIndex) {
-      const itmes = [...this];
-      const saved = itmes.slice(fromIndex, toIndex);
-      return new LinkedList(saved);
+    slice(fromIndex = 0, toIndex = __classPrivateFieldGet(this, _LinkedList_size, 'f')) {
+      const self = this;
+      const size = __classPrivateFieldGet(self, _LinkedList_size, 'f');
+      const result = new LinkedList();
+      const startIndex = normalizeIndex(size, fromIndex);
+      const endIndex = normalizeIndex(size, toIndex);
+      if (startIndex < endIndex) {
+        if (startIndex > size / 2) {
+          let index = size - 1;
+          let current = __classPrivateFieldGet(self, _LinkedList_tail, 'f');
+          while (current) {
+            if (index < startIndex) break;
+            if (index < endIndex) {
+              result.unshift(current.value);
+            }
+            current = current.prev;
+            index--;
+          }
+        } else {
+          let index = 0;
+          let current = __classPrivateFieldGet(self, _LinkedList_head, 'f');
+          while (current) {
+            if (index >= endIndex) break;
+            if (index >= startIndex) {
+              result.push(current.value);
+            }
+            current = current.next;
+            index++;
+          }
+        }
+      }
+      return result;
     }
     /**
      * @method concat
@@ -406,28 +438,26 @@
      * @method reverse
      */
     reverse() {
-      var _a, _b;
-      let current = __classPrivateFieldGet(this, _LinkedList_head, 'f');
+      const self = this;
+      let current = __classPrivateFieldGet(self, _LinkedList_head, 'f');
       while (current) {
         const { prev, next } = current;
         [current.prev, current.next] = [next, prev];
         current = next;
       }
-      (_a = this),
-        (_b = this),
-        ([
-          {
-            set value(_c) {
-              __classPrivateFieldSet(_a, _LinkedList_head, _c, 'f');
-            }
-          }.value,
-          {
-            set value(_c) {
-              __classPrivateFieldSet(_b, _LinkedList_tail, _c, 'f');
-            }
-          }.value
-        ] = [__classPrivateFieldGet(this, _LinkedList_tail, 'f'), __classPrivateFieldGet(this, _LinkedList_head, 'f')]);
-      return this;
+      [
+        {
+          set value(_a) {
+            __classPrivateFieldSet(self, _LinkedList_head, _a, 'f');
+          }
+        }.value,
+        {
+          set value(_a) {
+            __classPrivateFieldSet(self, _LinkedList_tail, _a, 'f');
+          }
+        }.value
+      ] = [__classPrivateFieldGet(self, _LinkedList_tail, 'f'), __classPrivateFieldGet(self, _LinkedList_head, 'f')];
+      return self;
     }
     /**
      * @method every
@@ -436,7 +466,7 @@
      */
     every(callback, context) {
       const callbackBound = callback.bind(context);
-      const [, index] = __classPrivateFieldGet(this, _LinkedList_instances, 'm', _LinkedList_search).call(
+      const [, index] = __classPrivateFieldGet(this, _LinkedList_instances, 'm', _LinkedList_find).call(
         this,
         (currentValue, currentIndex, source) => {
           return !callbackBound(currentValue, currentIndex, source);
@@ -451,7 +481,7 @@
      */
     some(callback, context) {
       const callbackBound = callback.bind(context);
-      const [, index] = __classPrivateFieldGet(this, _LinkedList_instances, 'm', _LinkedList_search).call(this, callbackBound);
+      const [, index] = __classPrivateFieldGet(this, _LinkedList_instances, 'm', _LinkedList_find).call(this, callbackBound);
       return index >= 0;
     }
     /**
@@ -460,11 +490,12 @@
      * @param context
      */
     forEach(callback, context) {
+      const self = this;
       let index = 0;
-      let current = __classPrivateFieldGet(this, _LinkedList_head, 'f');
+      let current = __classPrivateFieldGet(self, _LinkedList_head, 'f');
       const callbackBound = callback.bind(context);
       while (current) {
-        callbackBound(current.value, index, this);
+        callbackBound(current.value, index, self);
         current = current.next;
         index++;
       }
@@ -501,7 +532,7 @@
     (_LinkedList_head = new WeakMap()),
     (_LinkedList_tail = new WeakMap()),
     (_LinkedList_instances = new WeakSet()),
-    (_LinkedList_search = function _LinkedList_search(callback, reverse, context) {
+    (_LinkedList_find = function _LinkedList_find(callback, reverse, context) {
       const size = __classPrivateFieldGet(this, _LinkedList_size, 'f');
       if (size > 0) {
         const callbackBound = callback.bind(context);
@@ -531,15 +562,16 @@
       }
       return [, -1];
     }),
-    (_LinkedList_searchIndexOf = function _LinkedList_searchIndexOf(value, fromIndex, reverse) {
-      const size = __classPrivateFieldGet(this, _LinkedList_size, 'f');
+    (_LinkedList_indexOf = function _LinkedList_indexOf(value, fromIndex, reverse) {
+      const self = this;
+      const size = __classPrivateFieldGet(self, _LinkedList_size, 'f');
       const startIndex = normalizeIndex(size, fromIndex);
       if (startIndex < size) {
         const callback = (currentValue, currentIndex) => {
           return currentValue === value && currentIndex >= startIndex;
         };
-        const [, index] = __classPrivateFieldGet(this, _LinkedList_instances, 'm', _LinkedList_search).call(
-          this,
+        const [, index] = __classPrivateFieldGet(self, _LinkedList_instances, 'm', _LinkedList_find).call(
+          self,
           callback,
           reverse
         );
@@ -549,6 +581,12 @@
     }),
     Symbol.iterator)]() {
       return this.values();
+    }
+    /**
+     * @property length
+     */
+    get length() {
+      return __classPrivateFieldGet(this, _LinkedList_size, 'f');
     }
     /**
      * @method valueOf
