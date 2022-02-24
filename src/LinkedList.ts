@@ -286,7 +286,7 @@ export class LinkedList<T> {
    * @param deleteLength
    * @param values
    */
-  splice(fromIndex: number, deleteLength: number, ...values: T[]): T[] {
+  splice(fromIndex: number, deleteLength: number = this.#size, ...values: T[]): T[] {
     const size = this.#size;
 
     if (size > 0) {
@@ -334,6 +334,10 @@ export class LinkedList<T> {
           this.#head = head;
           this.#tail = tail;
         }
+
+        this.push(...values);
+
+        return removed;
       }
     }
 
@@ -505,6 +509,13 @@ export class LinkedList<T> {
    */
   [Symbol.iterator](): Iterator<T> {
     return this.values();
+  }
+
+  /**
+   * @method valueOf
+   */
+  valueOf() {
+    return [...this];
   }
 
   /**

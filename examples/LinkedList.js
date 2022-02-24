@@ -297,7 +297,7 @@
      * @param deleteLength
      * @param values
      */
-    splice(fromIndex, deleteLength, ...values) {
+    splice(fromIndex, deleteLength = __classPrivateFieldGet(this, _LinkedList_size, 'f'), ...values) {
       const size = __classPrivateFieldGet(this, _LinkedList_size, 'f');
       if (size > 0) {
         const startIndex = normalizeIndex(size, fromIndex);
@@ -346,6 +346,8 @@
             __classPrivateFieldSet(this, _LinkedList_head, head, 'f');
             __classPrivateFieldSet(this, _LinkedList_tail, tail, 'f');
           }
+          this.push(...values);
+          return removed;
         }
       }
       this.push(...values);
@@ -547,6 +549,12 @@
     }),
     Symbol.iterator)]() {
       return this.values();
+    }
+    /**
+     * @method valueOf
+     */
+    valueOf() {
+      return [...this];
     }
     /**
      * @method toString
