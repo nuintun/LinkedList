@@ -595,7 +595,7 @@ export class LinkedList<T> {
    * @method valueOf
    * @description 获取链表原始值
    */
-  valueOf() {
+  valueOf(): T[] {
     return [...this];
   }
 
