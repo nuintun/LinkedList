@@ -3,7 +3,7 @@ import { Node } from './types';
 /**
  * @function normalizeIndex
  * @description 标准化开始索引
- * @param size 双链表长度
+ * @param size 链表长度
  * @param fromIndex 开始索引
  */
 export function normalizeIndex(size: number, fromIndex: number = 0): number {
@@ -12,7 +12,7 @@ export function normalizeIndex(size: number, fromIndex: number = 0): number {
 
 /**
  * @function createNode
- * @description 根据值列表生成双链表节点
+ * @description 根据值列表生成链表节点
  * @param values 值列表
  */
 export function createNode<T>(values: T[]): [head: Node<T>, tail: Node<T>] {

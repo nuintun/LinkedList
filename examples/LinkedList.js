@@ -49,7 +49,7 @@
   /**
    * @function normalizeIndex
    * @description 标准化开始索引
-   * @param size 双链表长度
+   * @param size 链表长度
    * @param fromIndex 开始索引
    */
   function normalizeIndex(size, fromIndex = 0) {
@@ -57,7 +57,7 @@
   }
   /**
    * @function createNode
-   * @description 根据值列表生成双链表节点
+   * @description 根据值列表生成链表节点
    * @param values 值列表
    */
   function createNode(values) {
@@ -90,26 +90,39 @@
   }
 
   var _LinkedList_instances, _LinkedList_size, _LinkedList_head, _LinkedList_tail, _LinkedList_find, _LinkedList_indexOf;
+  /**
+   * @class LinkedList
+   * @description 类数组接口双向链表
+   */
   class LinkedList {
+    /**
+     * @constructor
+     * @description 类数组接口双向链表
+     * @param iterable 初始值
+     */
     constructor(iterable = []) {
       _LinkedList_instances.add(this);
       /**
        * @property #size
+       * @description 链表长度
        */
       _LinkedList_size.set(this, 0);
       /**
        * @property #head
+       * @description 链表头部
        */
       _LinkedList_head.set(this, null);
       /**
        * @property #tail
+       * @description 链表尾部
        */
       _LinkedList_tail.set(this, null);
       this.push(...iterable);
     }
     /**
      * @method unshift
-     * @param values
+     * @description 将一个或多个值添加到链表的头部，并返回该链表的新长度
+     * @param values 要添加到链表头部的值或多个值
      */
     unshift(...values) {
       var _a;
@@ -135,6 +148,7 @@
     }
     /**
      * @method shift
+     * @description 从链表中删除第一个值，并返回该值的值
      */
     shift() {
       var _a, _b;
@@ -159,7 +173,8 @@
     }
     /**
      * @method push
-     * @param values
+     * @description 将一个或多个值添加到链表的尾部，并返回该链表的新长度
+     * @param values 要添加到链表尾部的值或多个值
      */
     push(...values) {
       var _a;
@@ -185,6 +200,7 @@
     }
     /**
      * @method pop
+     * @description 从链表中删除最后一个值，并返回该值的值
      */
     pop() {
       var _a, _b;
@@ -209,7 +225,8 @@
     }
     /**
      * @method at
-     * @param index
+     * @description 查找指定索引处的值
+     * @param index 要查找的索引，允许负数
      */
     at(index) {
       const self = this;
@@ -229,8 +246,9 @@
     }
     /**
      * @method includes
-     * @param value
-     * @param fromIndex
+     * @description 用来判断一个链表是否包含一个指定的值
+     * @param value 需要查找的值
+     * @param fromIndex 开始索引，允许负数
      */
     includes(value, fromIndex) {
       const self = this;
@@ -251,24 +269,27 @@
     }
     /**
      * @method indexOf
-     * @param value
-     * @param fromIndex
+     * @description 返回在链表中可以找到一个给定值的第一个索引
+     * @param value 要查找的值
+     * @param fromIndex 开始索引，允许负数
      */
     indexOf(value, fromIndex) {
       return __classPrivateFieldGet(this, _LinkedList_instances, 'm', _LinkedList_indexOf).call(this, value, fromIndex);
     }
     /**
      * @method lastIndexOf
-     * @param value
-     * @param fromIndex
+     * @description 返回在链表中可以找到一个给定值的最后一个索引
+     * @param value 要查找的值
+     * @param fromIndex 开始索引，允许负数
      */
     lastIndexOf(value, fromIndex) {
       return __classPrivateFieldGet(this, _LinkedList_instances, 'm', _LinkedList_indexOf).call(this, value, fromIndex, true);
     }
     /**
-     * @method find
-     * @param callback
-     * @param context
+     * @function find
+     * @description 根据指定回调查找链表，返回找到的值
+     * @param callback 回调函数
+     * @param context 回调函数上下文
      */
     find(callback, context) {
       const [node] = __classPrivateFieldGet(this, _LinkedList_instances, 'm', _LinkedList_find).call(
@@ -280,9 +301,10 @@
       return node === null || node === void 0 ? void 0 : node.value;
     }
     /**
-     * @method findIndex
-     * @param callback
-     * @param context
+     * @function findIndex
+     * @description 根据指定回调查找链表，返回找到的索引
+     * @param callback 回调函数
+     * @param context 回调函数上下文
      */
     findIndex(callback, context) {
       const [, index] = __classPrivateFieldGet(this, _LinkedList_instances, 'm', _LinkedList_find).call(
@@ -295,11 +317,12 @@
     }
     /**
      * @method splice
-     * @param fromIndex
-     * @param deleteLength
-     * @param values
+     * @description 通过删除或替换现有值或者原地添加新的值来修改链表，并以数组形式返回被修改的内容
+     * @param fromIndex 开始索引，允许负数
+     * @param removedLength 要移除的长度
+     * @param values 要添加进链表的值
      */
-    splice(fromIndex, deleteLength = __classPrivateFieldGet(this, _LinkedList_size, 'f'), ...values) {
+    splice(fromIndex, removedLength = __classPrivateFieldGet(this, _LinkedList_size, 'f'), ...values) {
       var _a, _b;
       const self = this;
       const size = __classPrivateFieldGet(self, _LinkedList_size, 'f');
@@ -314,7 +337,7 @@
             startIndex / 2 > size
           );
           const head = start.prev;
-          const [tail, removed] = findNode(start, deleteLength);
+          const [tail, removed] = findNode(start, removedLength);
           __classPrivateFieldSet(
             (_a = self),
             _LinkedList_size,
@@ -359,8 +382,9 @@
     }
     /**
      * @method slice
-     * @param fromIndex
-     * @param toIndex
+     * @description 从当前链表中截取新的链表
+     * @param fromIndex 开始索引，允许负数
+     * @param toIndex 结束索引，允许负数
      */
     slice(fromIndex = 0, toIndex = __classPrivateFieldGet(this, _LinkedList_size, 'f')) {
       const self = this;
@@ -397,7 +421,8 @@
     }
     /**
      * @method concat
-     * @param sources
+     * @description 合并一个链表，并返回新的链表
+     * @param sources 要合并的链表
      */
     concat(...sources) {
       const result = new LinkedList();
@@ -408,8 +433,9 @@
     }
     /**
      * @method map
-     * @param callback
-     * @param context
+     * @description 根据回调映射出一个新链表
+     * @param callback 回调函数
+     * @param context 回调上下文
      */
     map(callback, context) {
       const result = new LinkedList();
@@ -421,8 +447,9 @@
     }
     /**
      * @method filter
-     * @param callback
-     * @param context
+     * @description 根据回过滤出一个新链表
+     * @param callback 回调函数
+     * @param context 回调上下文
      */
     filter(callback, context) {
       const result = new LinkedList();
@@ -436,6 +463,7 @@
     }
     /**
      * @method reverse
+     * @description 反转链表
      */
     reverse() {
       const self = this;
@@ -461,8 +489,9 @@
     }
     /**
      * @method every
-     * @param callback
-     * @param context
+     * @description 校验链表值是否都满足指定回调函数校验
+     * @param callback 回调函数
+     * @param context 回调上下文
      */
     every(callback, context) {
       const callbackBound = callback.bind(context);
@@ -476,8 +505,9 @@
     }
     /**
      * @method some
-     * @param callback
-     * @param context
+     * @description 校验链表值是否有一个满足指定回调函数校验
+     * @param callback 回调函数
+     * @param context 回调上下文
      */
     some(callback, context) {
       const callbackBound = callback.bind(context);
@@ -486,8 +516,9 @@
     }
     /**
      * @method forEach
-     * @param callback
-     * @param context
+     * @description 遍历链表
+     * @param callback 回调函数
+     * @param context 回调上下文
      */
     forEach(callback, context) {
       const self = this;
@@ -502,7 +533,8 @@
     }
     /**
      * @method join
-     * @param separator
+     * @description 将链表值根据指定字符拼接成字符串
+     * @param separator 分隔字符串
      */
     join(separator = ',') {
       let result = '';
@@ -517,6 +549,7 @@
     }
     /**
      * @method values
+     * @description 返回链表值的迭代器
      */
     *values() {
       let current = __classPrivateFieldGet(this, _LinkedList_head, 'f');
@@ -527,6 +560,7 @@
     }
     /**
      * @method iterator
+     * @description 默认迭代器
      */
     [((_LinkedList_size = new WeakMap()),
     (_LinkedList_head = new WeakMap()),
@@ -584,18 +618,21 @@
     }
     /**
      * @property length
+     * @description 获取链表长度
      */
     get length() {
       return __classPrivateFieldGet(this, _LinkedList_size, 'f');
     }
     /**
      * @method valueOf
+     * @description 获取链表原始值
      */
     valueOf() {
       return [...this];
     }
     /**
      * @method toString
+     * @description 获取链表字符串
      */
     toString() {
       return this.join();

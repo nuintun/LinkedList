@@ -1,31 +1,43 @@
 import { Callback, FindResult, Node } from './types';
 import { createNode, findNode, normalizeIndex } from './utils';
 
+/**
+ * @class LinkedList
+ * @description 类数组接口双向链表
+ */
 export class LinkedList<T> {
   /**
    * @property #size
+   * @description 链表长度
    */
   #size: number = 0;
 
   /**
    * @property #head
+   * @description 链表头部
    */
   #head: Node<T> | null = null;
 
   /**
    * @property #tail
+   * @description 链表尾部
    */
   #tail: Node<T> | null = null;
 
+  /**
+   * @constructor
+   * @description 类数组接口双向链表
+   * @param iterable 初始值
+   */
   constructor(iterable: Iterable<T> = []) {
     this.push(...iterable);
   }
 
   /**
    * @function #find
-   * @description 根据指定回调查找双链表
+   * @description 根据指定回调查找链表，返回找到的值和索引
    * @param callback 回调函数
-   * @param reverse 是否逆向搜索
+   * @param reverse 是否逆向查找
    * @param context 回调函数上下文
    */
   #find(callback: Callback<T>, reverse?: boolean, context?: any): FindResult<T> {
@@ -68,10 +80,10 @@ export class LinkedList<T> {
 
   /**
    * @function #indexOf
-   * @description 根据指定值搜索双链表
-   * @param value 搜索值
+   * @description 获取值在链表中的索引
+   * @param value 要获取的值
    * @param fromIndex 开始索引
-   * @param reverse 是否逆向搜索
+   * @param reverse 是否逆向查找
    */
   #indexOf(value: T, fromIndex?: number, reverse?: boolean): number {
     const self = this;
@@ -93,7 +105,8 @@ export class LinkedList<T> {
 
   /**
    * @method unshift
-   * @param values
+   * @description 将一个或多个值添加到链表的头部，并返回该链表的新长度
+   * @param values 要添加到链表头部的值或多个值
    */
   unshift(...values: T[]): number {
     const self = this;
@@ -120,6 +133,7 @@ export class LinkedList<T> {
 
   /**
    * @method shift
+   * @description 从链表中删除第一个值，并返回该值的值
    */
   shift(): T | undefined {
     const self = this;
@@ -144,7 +158,8 @@ export class LinkedList<T> {
 
   /**
    * @method push
-   * @param values
+   * @description 将一个或多个值添加到链表的尾部，并返回该链表的新长度
+   * @param values 要添加到链表尾部的值或多个值
    */
   push(...values: T[]): number {
     const self = this;
@@ -171,6 +186,7 @@ export class LinkedList<T> {
 
   /**
    * @method pop
+   * @description 从链表中删除最后一个值，并返回该值的值
    */
   pop(): T | undefined {
     const self = this;
@@ -195,7 +211,8 @@ export class LinkedList<T> {
 
   /**
    * @method at
-   * @param index
+   * @description 查找指定索引处的值
+   * @param index 要查找的索引，允许负数
    */
   at(index: number): T | undefined {
     const self = this;
@@ -215,8 +232,9 @@ export class LinkedList<T> {
 
   /**
    * @method includes
-   * @param value
-   * @param fromIndex
+   * @description 用来判断一个链表是否包含一个指定的值
+   * @param value 需要查找的值
+   * @param fromIndex 开始索引，允许负数
    */
   includes(value: T, fromIndex?: number): boolean {
     const self = this;
@@ -238,8 +256,9 @@ export class LinkedList<T> {
 
   /**
    * @method indexOf
-   * @param value
-   * @param fromIndex
+   * @description 返回在链表中可以找到一个给定值的第一个索引
+   * @param value 要查找的值
+   * @param fromIndex 开始索引，允许负数
    */
   indexOf(value: T, fromIndex?: number): number {
     return this.#indexOf(value, fromIndex);
@@ -247,17 +266,19 @@ export class LinkedList<T> {
 
   /**
    * @method lastIndexOf
-   * @param value
-   * @param fromIndex
+   * @description 返回在链表中可以找到一个给定值的最后一个索引
+   * @param value 要查找的值
+   * @param fromIndex 开始索引，允许负数
    */
   lastIndexOf(value: T, fromIndex?: number): number {
     return this.#indexOf(value, fromIndex, true);
   }
 
   /**
-   * @method find
-   * @param callback
-   * @param context
+   * @function find
+   * @description 根据指定回调查找链表，返回找到的值
+   * @param callback 回调函数
+   * @param context 回调函数上下文
    */
   find(callback: Callback<T>, context?: any): T | undefined {
     const [node] = this.#find(callback, false, context);
@@ -266,9 +287,10 @@ export class LinkedList<T> {
   }
 
   /**
-   * @method findIndex
-   * @param callback
-   * @param context
+   * @function findIndex
+   * @description 根据指定回调查找链表，返回找到的索引
+   * @param callback 回调函数
+   * @param context 回调函数上下文
    */
   findIndex(callback: Callback<T>, context?: any): number {
     const [, index] = this.#find(callback, false, context);
@@ -278,11 +300,12 @@ export class LinkedList<T> {
 
   /**
    * @method splice
-   * @param fromIndex
-   * @param deleteLength
-   * @param values
+   * @description 通过删除或替换现有值或者原地添加新的值来修改链表，并以数组形式返回被修改的内容
+   * @param fromIndex 开始索引，允许负数
+   * @param removedLength 要移除的长度
+   * @param values 要添加进链表的值
    */
-  splice(fromIndex: number, deleteLength: number = this.#size, ...values: T[]): T[] {
+  splice(fromIndex: number, removedLength: number = this.#size, ...values: T[]): T[] {
     const self = this;
     const size = self.#size;
 
@@ -295,7 +318,7 @@ export class LinkedList<T> {
         }, startIndex / 2 > size) as [Node<T>, number];
 
         const head = start.prev;
-        const [tail, removed] = findNode(start, deleteLength);
+        const [tail, removed] = findNode(start, removedLength);
 
         self.#size -= removed.length;
 
@@ -345,8 +368,9 @@ export class LinkedList<T> {
 
   /**
    * @method slice
-   * @param fromIndex
-   * @param toIndex
+   * @description 从当前链表中截取新的链表
+   * @param fromIndex 开始索引，允许负数
+   * @param toIndex 结束索引，允许负数
    */
   slice(fromIndex: number = 0, toIndex: number = this.#size): LinkedList<T> {
     const self = this;
@@ -394,7 +418,8 @@ export class LinkedList<T> {
 
   /**
    * @method concat
-   * @param sources
+   * @description 合并一个链表，并返回新的链表
+   * @param sources 要合并的链表
    */
   concat(...sources: LinkedList<T>[]): LinkedList<T> {
     const result = new LinkedList<T>();
@@ -408,8 +433,9 @@ export class LinkedList<T> {
 
   /**
    * @method map
-   * @param callback
-   * @param context
+   * @description 根据回调映射出一个新链表
+   * @param callback 回调函数
+   * @param context 回调上下文
    */
   map<U>(callback: Callback<T, U>, context?: any): LinkedList<U> {
     const result = new LinkedList<U>();
@@ -424,8 +450,9 @@ export class LinkedList<T> {
 
   /**
    * @method filter
-   * @param callback
-   * @param context
+   * @description 根据回过滤出一个新链表
+   * @param callback 回调函数
+   * @param context 回调上下文
    */
   filter(callback: Callback<T>, context?: any): LinkedList<T> {
     const result = new LinkedList<T>();
@@ -442,6 +469,7 @@ export class LinkedList<T> {
 
   /**
    * @method reverse
+   * @description 反转链表
    */
   reverse(): LinkedList<T> {
     const self = this;
@@ -463,8 +491,9 @@ export class LinkedList<T> {
 
   /**
    * @method every
-   * @param callback
-   * @param context
+   * @description 校验链表值是否都满足指定回调函数校验
+   * @param callback 回调函数
+   * @param context 回调上下文
    */
   every(callback: Callback<T>, context?: any): boolean {
     const callbackBound = callback.bind(context);
@@ -478,8 +507,9 @@ export class LinkedList<T> {
 
   /**
    * @method some
-   * @param callback
-   * @param context
+   * @description 校验链表值是否有一个满足指定回调函数校验
+   * @param callback 回调函数
+   * @param context 回调上下文
    */
   some(callback: Callback<T>, context?: any): boolean {
     const callbackBound = callback.bind(context);
@@ -491,8 +521,9 @@ export class LinkedList<T> {
 
   /**
    * @method forEach
-   * @param callback
-   * @param context
+   * @description 遍历链表
+   * @param callback 回调函数
+   * @param context 回调上下文
    */
   forEach(callback: Callback<T, void>, context?: any): void {
     const self = this;
@@ -513,7 +544,8 @@ export class LinkedList<T> {
 
   /**
    * @method join
-   * @param separator
+   * @description 将链表值根据指定字符拼接成字符串
+   * @param separator 分隔字符串
    */
   join(separator: string = ','): string {
     let result = '';
@@ -531,6 +563,7 @@ export class LinkedList<T> {
 
   /**
    * @method values
+   * @description 返回链表值的迭代器
    */
   *values(): Iterator<T> {
     let current = this.#head;
@@ -544,6 +577,7 @@ export class LinkedList<T> {
 
   /**
    * @method iterator
+   * @description 默认迭代器
    */
   [Symbol.iterator](): Iterator<T> {
     return this.values();
@@ -551,6 +585,7 @@ export class LinkedList<T> {
 
   /**
    * @property length
+   * @description 获取链表长度
    */
   get length(): number {
     return this.#size;
@@ -558,6 +593,7 @@ export class LinkedList<T> {
 
   /**
    * @method valueOf
+   * @description 获取链表原始值
    */
   valueOf() {
     return [...this];
@@ -565,6 +601,7 @@ export class LinkedList<T> {
 
   /**
    * @method toString
+   * @description 获取链表字符串
    */
   toString(): string {
     return this.join();
