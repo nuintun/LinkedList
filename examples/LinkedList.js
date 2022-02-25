@@ -57,7 +57,7 @@
   }
   /**
    * @function createNode
-   * @description 根据值列表生产双链表节点
+   * @description 根据值列表生成双链表节点
    * @param values 值列表
    */
   function createNode(values) {
@@ -74,12 +74,12 @@
     return [head, tail];
   }
   /**
-   * @function findNodeOffset
+   * @function findNode
    * @description 查找开始节点偏移量后的节点
    * @param node 开始节点
    * @param offset 节点偏移量
    */
-  function findNodeOffset(node, offset) {
+  function findNode(node, offset) {
     const values = [];
     let current = node;
     while (offset-- > 0 && current) {
@@ -314,7 +314,7 @@
             startIndex / 2 > size
           );
           const head = start.prev;
-          const [tail, removed] = findNodeOffset(start, deleteLength);
+          const [tail, removed] = findNode(start, deleteLength);
           __classPrivateFieldSet(
             (_a = self),
             _LinkedList_size,

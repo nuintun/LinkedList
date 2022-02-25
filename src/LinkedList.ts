@@ -1,5 +1,5 @@
 import { Callback, FindResult, Node } from './types';
-import { createNode, findNodeOffset, normalizeIndex } from './utils';
+import { createNode, findNode, normalizeIndex } from './utils';
 
 export class LinkedList<T> {
   /**
@@ -295,7 +295,7 @@ export class LinkedList<T> {
         }, startIndex / 2 > size) as [Node<T>, number];
 
         const head = start.prev;
-        const [tail, removed] = findNodeOffset(start, deleteLength);
+        const [tail, removed] = findNode(start, deleteLength);
 
         self.#size -= removed.length;
 
@@ -516,7 +516,7 @@ export class LinkedList<T> {
    * @param separator
    */
   join(separator: string = ','): string {
-    let result: string = '';
+    let result = '';
 
     this.forEach((value, index) => {
       if (index > 0) {

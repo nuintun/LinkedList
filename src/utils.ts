@@ -12,7 +12,7 @@ export function normalizeIndex(size: number, fromIndex: number = 0): number {
 
 /**
  * @function createNode
- * @description 根据值列表生产双链表节点
+ * @description 根据值列表生成双链表节点
  * @param values 值列表
  */
 export function createNode<T>(values: T[]): [head: Node<T>, tail: Node<T>] {
@@ -36,12 +36,12 @@ export function createNode<T>(values: T[]): [head: Node<T>, tail: Node<T>] {
 }
 
 /**
- * @function findNodeOffset
+ * @function findNode
  * @description 查找开始节点偏移量后的节点
  * @param node 开始节点
  * @param offset 节点偏移量
  */
-export function findNodeOffset<T>(node: Node<T>, offset: number): [node: Node<T> | null, values: T[]] {
+export function findNode<T>(node: Node<T>, offset: number): [node: Node<T> | null, values: T[]] {
   const values: T[] = [];
 
   let current: Node<T> | null = node;
