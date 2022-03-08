@@ -38,7 +38,7 @@
   },
   "devDependencies": {
     "rimraf": "^3.0.2",
-    "rollup": "^2.69.0",
+    "rollup": "^2.70.0",
     "prettier": "^2.5.1",
     "typescript": "^4.6.2",
     "magic-string": "^0.26.1",
