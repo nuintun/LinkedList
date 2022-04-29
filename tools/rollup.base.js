@@ -12,6 +12,7 @@ export default function rollup(esnext) {
       interop: false,
       exports: 'auto',
       esModule: false,
+      preferConst: true,
       dir: esnext ? 'esm' : 'cjs',
       format: esnext ? 'esm' : 'cjs'
     },

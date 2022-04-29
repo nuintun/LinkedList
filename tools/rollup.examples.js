@@ -25,6 +25,7 @@ export default {
     interop: false,
     exports: 'auto',
     esModule: false,
+    preferConst: true,
     name: 'LinkedList',
     amd: { id: 'LinkedList' },
     file: 'examples/LinkedList.js'
