@@ -10,4 +10,4 @@ function clean(paths) {
   paths.forEach(path => rimraf.sync(path));
 }
 
-clean(['cjs', 'esm', 'types', 'tests/LinkedList.js']);
+clean(['cjs', 'esm', 'types']);

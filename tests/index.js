@@ -2,7 +2,7 @@
  * @module tests
  */
 
-import LinkedList from './LinkedList.js';
+import LinkedList from '../esm/index.js';
 
 const linked = new LinkedList([1, 2, 3, 4, 5]);
 
