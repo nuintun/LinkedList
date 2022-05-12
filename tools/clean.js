@@ -2,7 +2,7 @@
  * @module clean
  */
 
-const rimraf = require('rimraf');
+import rimraf from 'rimraf';
 
 function clean(paths) {
   paths = Array.isArray(paths) ? paths : [paths];
@@ -10,4 +10,4 @@ function clean(paths) {
   paths.forEach(path => rimraf.sync(path));
 }
 
-clean(['cjs', 'esm', 'typings', 'examples/qrcode.js']);
+clean(['cjs', 'esm', 'types', 'tests/LinkedList.js']);

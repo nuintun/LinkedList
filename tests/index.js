@@ -1,4 +1,8 @@
-const LinkedList = require('./LinkedList');
+/**
+ * @module tests
+ */
+
+import LinkedList from './LinkedList.js';
 
 const linked = new LinkedList([1, 2, 3, 4, 5]);
 

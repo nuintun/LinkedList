@@ -9,9 +9,10 @@ import typescript from '@rollup/plugin-typescript';
 
 const banner = `/**
  * @module LinkedList
+ * @package ${pkg.name}
  * @license ${pkg.license}
  * @version ${pkg.version}
- * @author ${pkg.author.name}
+ * @author ${pkg.author.name} <${pkg.author.email}>
  * @description ${pkg.description}
  * @see ${pkg.homepage}
  */
@@ -21,14 +22,12 @@ export default {
   input: 'src/index.ts',
   output: {
     banner,
-    format: 'umd',
+    format: 'esm',
     interop: false,
     exports: 'auto',
     esModule: false,
     preferConst: true,
-    name: 'LinkedList',
-    amd: { id: 'LinkedList' },
-    file: 'examples/LinkedList.js'
+    file: 'tests/LinkedList.js'
   },
   plugins: [resolve(), typescript(), treeShake()]
 };
