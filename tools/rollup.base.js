@@ -35,6 +35,11 @@ export default function rollup(esnext) {
       chunkFileNames: `[name].${esnext ? 'js' : 'cjs'}`
     },
     external: ['tslib'],
-    plugins: [typescript(), treeShake()]
+    plugins: [typescript(), treeShake()],
+    onwarn(error, warn) {
+      if (error.code !== 'CIRCULAR_DEPENDENCY') {
+        warn(error);
+      }
+    }
   };
 }
