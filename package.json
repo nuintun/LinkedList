@@ -31,6 +31,7 @@
   "bugs": {
     "url": "https://github.com/nuintun/LinkedList/issues"
   },
+  "homepage": "https://github.com/nuintun/LinkedList#readme",
   "scripts": {
     "lint": "tsc --noEmit",
     "test": "node tests/index.js",
@@ -48,11 +49,10 @@
   },
   "devDependencies": {
     "@rollup/plugin-typescript": "^11.0.0",
-    "magic-string": "^0.27.0",
-    "prettier": "^2.8.3",
-    "rimraf": "^4.1.2",
-    "rollup": "^3.14.0",
-    "typescript": "^4.9.5"
-  },
-  "homepage": "https://github.com/nuintun/LinkedList#readme"
+    "magic-string": "^0.30.0",
+    "prettier": "^2.8.5",
+    "rimraf": "^4.4.0",
+    "rollup": "^3.20.0",
+    "typescript": "^5.0.2"
+  }
 }
