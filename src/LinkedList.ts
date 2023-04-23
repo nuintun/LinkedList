@@ -1,5 +1,5 @@
 import { Callback, FindResult, Node } from './interface';
-import { createNode, findNode, normalizeIndex } from './utils';
+import { createNodes, normalizeIndex, removeNodes } from './utils';
 
 /**
  * @class LinkedList
@@ -115,7 +115,7 @@ export class LinkedList<T> {
     if (addedLength < 1) return self.#size;
 
     const head = self.#head;
-    const [first, last] = createNode(values);
+    const [first, last] = createNodes(values);
 
     if (head) {
       head.prev = last;
@@ -168,7 +168,7 @@ export class LinkedList<T> {
     if (addedLength < 1) return self.#size;
 
     const tail = self.#tail;
-    const [first, last] = createNode(values);
+    const [first, last] = createNodes(values);
 
     if (tail) {
       first.prev = tail;
@@ -318,7 +318,7 @@ export class LinkedList<T> {
         }, startIndex / 2 > size) as [Node<T>, number];
 
         const head = start.prev;
-        const [tail, removed] = findNode(start, removedLength);
+        const [tail, removed] = removeNodes(start, removedLength);
 
         self.#size -= removed.length;
 
@@ -326,7 +326,7 @@ export class LinkedList<T> {
           const { length: addedLength } = values;
 
           if (addedLength > 0) {
-            const [first, last] = createNode(values);
+            const [first, last] = createNodes(values);
 
             [head.next, tail.prev] = [first, last];
             [first.prev, last.next] = [head, tail];
