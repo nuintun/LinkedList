@@ -1,4 +1,4 @@
-import { Callback, FindResult, Node } from './types';
+import { Callback, FindResult, Node } from './interface';
 import { createNode, findNode, normalizeIndex } from './utils';
 
 /**

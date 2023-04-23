@@ -1,2 +1,2 @@
-export { Callback, Node } from './types';
+export { Callback, Node } from './interface';
 export { LinkedList as default } from './LinkedList';
