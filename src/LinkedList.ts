@@ -313,9 +313,12 @@ export class LinkedList<T> {
       const startIndex = normalizeIndex(size, fromIndex);
 
       if (startIndex < size) {
-        const [start] = self.#find((_currentValue, currentIndex) => {
-          return currentIndex === startIndex;
-        }, startIndex / 2 > size) as [Node<T>, number];
+        const [start] = self.#find(
+          (_currentValue, currentIndex) => {
+            return currentIndex === startIndex;
+          },
+          startIndex / 2 > size
+        ) as [Node<T>, number];
 
         const head = start.prev;
         const [tail, removed] = removeNodes(start, removedLength);
