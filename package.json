@@ -1,6 +1,6 @@
 {
   "name": "@nuintun/linked-list",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "A typescript array-like doubly linked list.",
   "type": "module",
   "main": "cjs/index.cjs",
@@ -46,14 +46,14 @@
     "build:types": "tsc --declaration --emitDeclarationOnly --declarationDir types"
   },
   "dependencies": {
-    "tslib": "^2.6.2"
+    "tslib": "^2.6.3"
   },
   "devDependencies": {
     "@rollup/plugin-typescript": "^11.1.6",
-    "magic-string": "^0.30.8",
-    "prettier": "^3.2.5",
-    "rimraf": "^5.0.5",
-    "rollup": "^4.12.0",
-    "typescript": "^5.3.3"
+    "magic-string": "^0.30.10",
+    "prettier": "^3.3.3",
+    "rimraf": "^6.0.1",
+    "rollup": "^4.18.1",
+    "typescript": "^5.5.3"
   }
 }
