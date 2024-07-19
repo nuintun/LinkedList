@@ -1,3 +1,7 @@
+/**
+ * @module utils
+ */
+
 import { Node } from './interface';
 
 /**

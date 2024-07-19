@@ -1,3 +1,7 @@
+/**
+ * @module LinkedList
+ */
+
 import { Callback, FindResult, Node } from './interface';
 import { createNodes, normalizeIndex, removeNodes } from './utils';
 

@@ -1,3 +1,7 @@
+/**
+ * @module interface
+ */
+
 import { LinkedList } from './LinkedList';
 
 export interface Node<T> {
