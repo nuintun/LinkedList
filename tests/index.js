@@ -1,5 +1,5 @@
 /**
- * @module tests
+ * @module index
  */
 
 import { LinkedList } from '@nuintun/linked-list';
