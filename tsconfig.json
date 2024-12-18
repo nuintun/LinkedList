@@ -1,17 +1,18 @@
 {
   "compilerOptions": {
-    "strict": true,
+    "baseUrl": ".",
     "pretty": true,
+    "strict": true,
     "newLine": "lf",
-    "target": "ES2015",
     "module": "ESNext",
+    "target": "ES2015",
     "skipLibCheck": true,
     "importHelpers": true,
     "noUnusedLocals": true,
     "esModuleInterop": true,
     "resolveJsonModule": true,
-    "moduleResolution": "Node",
     "noUnusedParameters": true,
+    "moduleResolution": "bundler",
     "experimentalDecorators": true,
     "forceConsistentCasingInFileNames": true
   },
