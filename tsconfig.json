@@ -4,6 +4,7 @@
     "pretty": true,
     "strict": true,
     "newLine": "lf",
+    "jsx": "react-jsx",
     "module": "ESNext",
     "target": "ES2015",
     "skipLibCheck": true,
@@ -11,9 +12,9 @@
     "noUnusedLocals": true,
     "esModuleInterop": true,
     "resolveJsonModule": true,
+    "noImplicitOverride": true,
     "noUnusedParameters": true,
     "moduleResolution": "bundler",
-    "experimentalDecorators": true,
     "forceConsistentCasingInFileNames": true
   },
   "include": [
