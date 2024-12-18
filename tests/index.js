@@ -2,7 +2,7 @@
  * @module tests
  */
 
-import LinkedList from '../esm/index.js';
+import { LinkedList } from '@nuintun/linked-list';
 
 const linked = new LinkedList([1, 2, 3, 4, 5]);
 
