@@ -15,4 +15,4 @@
 [npm-url]: https://www.npmjs.org/package/@nuintun/linked-list
 [download-image]: https://img.shields.io/npm/dm/@nuintun/linked-list?style=flat-square
 [license-image]: https://img.shields.io/github/license/nuintun/LinkedList?style=flat-square
-[license-url]: https://github.com/nuintun/LinkedList/blob/master/LICENSE
+[license-url]: https://github.com/nuintun/LinkedList/blob/main/LICENSE
