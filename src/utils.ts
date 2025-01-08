@@ -11,7 +11,7 @@ import { Node } from './interface';
  * @param fromIndex 开始索引
  */
 export function normalizeIndex(size: number, fromIndex: number = 0): number {
-  return fromIndex < 0 ? Math.max(0, size + fromIndex) : fromIndex;
+  return fromIndex >= 0 ? fromIndex : size + fromIndex;
 }
 
 /**

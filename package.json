@@ -1,6 +1,6 @@
 {
   "name": "@nuintun/linked-list",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "A typescript array-like doubly linked list.",
   "type": "module",
   "main": "cjs/index.cjs",
@@ -36,10 +36,10 @@
     "lint": "tsc --noEmit",
     "test": "node tests/index.js",
     "clean": "node tools/clean.js",
-    "prepublishOnly": "npm run build",
     "build:cjs": "rollup -c tools/rollup.cjs.js",
     "build:esm": "rollup -c tools/rollup.esm.js",
     "build:fix-types": "node tools/fix-types.js",
+    "prepublishOnly": "npm run build && npm run test",
     "format": "prettier --write . --ignore-path .prettierignore",
     "build": "npm run clean && npm run build:main && npm run format",
     "build:main": "npm run build:cjs && npm run build:esm && npm run build:fix-types"

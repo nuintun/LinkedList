@@ -223,7 +223,7 @@ export class LinkedList<T> {
     const size = self.#size;
     const startIndex = normalizeIndex(size, index);
 
-    if (startIndex < size) {
+    if (startIndex >= 0 && startIndex < size) {
       const callback: Callback<T> = (_currentValue, currentIndex) => {
         return currentIndex === startIndex;
       };
