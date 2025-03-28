@@ -1,6 +1,6 @@
 {
   "name": "@nuintun/linked-list",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "description": "A typescript array-like doubly linked list.",
   "type": "module",
   "main": "cjs/index.cjs",
@@ -8,7 +8,8 @@
   "exports": {
     ".": {
       "import": "./esm/index.js",
-      "require": "./cjs/index.cjs"
+      "require": "./cjs/index.cjs",
+      "default": "./esm/index.js"
     }
   },
   "files": [
@@ -49,7 +50,7 @@
   },
   "devDependencies": {
     "@rollup/plugin-typescript": "^12.1.2",
-    "dts-paths": "^1.1.4",
+    "dts-paths": "^1.1.5",
     "magic-string": "^0.30.17",
     "prettier": "^3.5.3",
     "rimraf": "^6.0.1",
