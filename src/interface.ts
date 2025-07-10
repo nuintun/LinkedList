@@ -10,6 +10,8 @@ export interface Node<T> {
   next: Node<T> | null;
 }
 
-export type FindResult<T> = [node: Node<T>, index: number] | [node: undefined, index: -1];
+export interface Callback<T, R = boolean> {
+  (value: T, index: number, source: LinkedList<T>): R;
+}
 
-export type Callback<T, R = boolean> = (value: T, index: number, source: LinkedList<T>) => R;
+export type FindResult<T> = [node: Node<T>, index: number] | [node: undefined, index: -1];
