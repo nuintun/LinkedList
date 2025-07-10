@@ -2,6 +2,8 @@
  * @module index
  */
 
-export type { Callback, Node } from './interface';
+// Interface
+export type { Callback } from './interface';
 
+// Export
 export { LinkedList } from './LinkedList';
