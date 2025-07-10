@@ -1,3 +1,7 @@
+/**
+ * @module index
+ */
+
 import assert from 'node:assert';
 import { LinkedList } from '@nuintun/linked-list';
 import { beforeEach, describe, it } from 'node:test';
