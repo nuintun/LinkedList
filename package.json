@@ -1,6 +1,6 @@
 {
   "name": "@nuintun/linked-list",
-  "version": "0.2.8",
+  "version": "0.2.9",
   "description": "A typescript array-like doubly linked list.",
   "type": "module",
   "main": "cjs/index.cjs",
@@ -50,10 +50,10 @@
   },
   "devDependencies": {
     "@rollup/plugin-typescript": "^12.1.4",
-    "dts-paths": "^1.1.11",
+    "dts-paths": "^1.1.12",
     "prettier": "^3.6.2",
     "rimraf": "^6.0.1",
-    "rollup": "^4.50.0",
+    "rollup": "^4.50.1",
     "typescript": "^5.9.2"
   }
 }
