@@ -1,12 +1,12 @@
 {
   "compilerOptions": {
-    "baseUrl": ".",
     "pretty": true,
     "strict": true,
     "newLine": "lf",
     "jsx": "react-jsx",
-    "module": "ESNext",
-    "target": "ES2015",
+    "module": "esnext",
+    "rootDir": "./src",
+    "target": "es2015",
     "skipLibCheck": true,
     "importHelpers": true,
     "noUnusedLocals": true,
@@ -14,7 +14,12 @@
     "resolveJsonModule": true,
     "noImplicitOverride": true,
     "noUnusedParameters": true,
-    "moduleResolution": "bundler"
+    "moduleResolution": "bundler",
+    "paths": {
+      "/*": [
+        "./src/*"
+      ]
+    }
   },
   "include": [
     "src/**/*"
