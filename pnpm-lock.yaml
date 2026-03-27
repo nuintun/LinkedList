@@ -16,8 +16,8 @@ importers:
         specifier: ^12.3.0
         version: 12.3.0(rollup@4.60.0)(tslib@2.8.1)(typescript@6.0.2)
       dts-paths:
-        specifier: ^2.1.1
-        version: 2.1.1(typescript@6.0.2)
+        specifier: ^2.1.2
+        version: 2.1.2(typescript@6.0.2)
       prettier:
         specifier: ^3.8.1
         version: 3.8.1
@@ -194,8 +194,8 @@ packages:
     resolution: {integrity: sha512-VZznLgtwhn+Mact9tfiwx64fA9erHH/MCXEUfB/0bX/6Fz6ny5EGTXYltMocqg4xFAQZtnO3DHWWXi8RiuN7cQ==}
     engines: {node: 18 || 20 || >=22}
 
-  dts-paths@2.1.1:
-    resolution: {integrity: sha512-364XwEPUs+s8bK2in5X97q1/6s7mXlFQJobBwtKgW22pRDowO5FWVTA4Gtxhv5uV+cC/LzpSZEBBcfihuET7HA==}
+  dts-paths@2.1.2:
+    resolution: {integrity: sha512-kWH9B/fhfBjvLnV3yiw3oWtljjXM10l92zHH5sSSkyOvqMRfh73uI7VNgDRv+VdYVzAEcqy8AGhxWdmAYkQJnA==}
     peerDependencies:
       typescript: '>=5.0.0'
 
@@ -387,7 +387,7 @@ snapshots:
     dependencies:
       balanced-match: 4.0.4
 
-  dts-paths@2.1.1(typescript@6.0.2):
+  dts-paths@2.1.2(typescript@6.0.2):
     dependencies:
       magic-string: 0.30.21
       tslib: 2.8.1
