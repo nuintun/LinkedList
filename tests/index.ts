@@ -22,12 +22,13 @@ describe('LinkedList', () => {
     });
 
     it('should throw error for invalid iterable', () => {
+      // @ts-expect-error
       assert.throws(() => new LinkedList({}));
     });
   });
 
   describe('Basic Operations', () => {
-    let list;
+    let list: LinkedList<number>;
 
     beforeEach(() => {
       list = new LinkedList();
@@ -63,7 +64,7 @@ describe('LinkedList', () => {
   });
 
   describe('Search Operations', () => {
-    let list;
+    let list: LinkedList<number>;
 
     beforeEach(() => {
       list = new LinkedList([1, 2, 3, 2, 1]);
@@ -98,7 +99,7 @@ describe('LinkedList', () => {
   });
 
   describe('Modification Operations', () => {
-    let list;
+    let list: LinkedList<number>;
 
     beforeEach(() => {
       list = new LinkedList([1, 2, 3, 4, 5]);
